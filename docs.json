@@ -2,69 +2,40 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "SeaOtter",
+  "description": "Control plane API for managed Hermes Agent hosting",
   "colors": {
     "primary": "#0089FF",
     "light": "#00C8C8",
     "dark": "#0007CD"
   },
-  "favicon": "https://seaotter.dev/favicon.ico",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "groups": [
-      {
-        "group": "Get started",
-        "pages": [
-          "index",
-          "authentication"
-        ]
-      },
-      {
-        "group": "Concepts",
-        "pages": [
-          "guides/provisioning-lifecycle",
-          "guides/errors",
-          "guides/versioning",
-          "guides/changelog"
-        ]
-      },
-      {
-        "group": "API reference",
-        "pages": [
-          "api-reference/overview",
-          "api-reference/list-agents",
-          "api-reference/create-agent",
-          "api-reference/get-agent",
-          "api-reference/create-api-key"
-        ]
-      }
-    ]
-  },
+  "favicon": "/favicon.png",
   "logo": {
-    "light": "https://seaotter.dev/brand/sea-otter-logo-light.png",
-    "dark": "https://seaotter.dev/brand/sea-otter-logo-dark.png",
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png",
     "href": "https://seaotter.dev"
+  },
+  "fonts": {
+    "family": "DM Sans"
+  },
+  "background": {
+    "color": {
+      "light": "#F4F4F5",
+      "dark": "#0F0F0F"
+    }
   },
   "navbar": {
     "links": [
       {
-        "href": "https://seaotter.dev",
-        "label": "App"
+        "label": "App",
+        "href": "https://seaotter.dev"
       },
       {
-        "href": "https://seaotter.dev/trust",
-        "label": "Trust"
+        "label": "Trust",
+        "href": "https://seaotter.dev/trust"
       },
       {
-        "href": "https://status.seaotter.dev",
-        "label": "Status"
+        "label": "Status",
+        "href": "https://status.seaotter.dev"
       }
     ],
     "primary": {
@@ -73,45 +44,65 @@
       "href": "https://seaotter.dev/dashboard"
     }
   },
-  "contextual": {
-    "options": [
-      "copy",
-      "download-spec"
-    ]
-  },
   "footer": {
     "socials": {
       "website": "https://seaotter.dev"
     }
   },
-  "description": "Control plane API for managed Hermes Agent hosting",
   "api": {
-    "openapi": "https://seaotter-api-bpenevambq-uc.a.run.app/openapi.json",
     "playground": {
       "display": "interactive"
-    },
-    "examples": {
-      "languages": [
-        "curl",
-        "python",
-        "javascript"
-      ],
-      "prefill": true
     },
     "mdx": {
       "auth": {
         "method": "bearer"
+      }
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Guides",
+        "groups": [
+          {
+            "group": "Get started",
+            "pages": [
+              "index",
+              "authentication"
+            ]
+          },
+          {
+            "group": "Concepts",
+            "pages": [
+              "guides/provisioning-lifecycle",
+              "guides/errors",
+              "guides/versioning",
+              "guides/changelog"
+            ]
+          }
+        ]
       },
-      "server": "https://seaotter-api-bpenevambq-uc.a.run.app"
-    }
+      {
+        "tab": "API reference",
+        "groups": [
+          {
+            "group": "API reference",
+            "pages": [
+              "api-reference/overview",
+              "api-reference/list-agents",
+              "api-reference/create-agent",
+              "api-reference/get-agent",
+              "api-reference/create-api-key"
+            ]
+          }
+        ]
+      }
+    ]
   },
-  "background": {
-    "color": {
-      "light": "#F4F4F5",
-      "dark": "#0F0F0F"
-    }
-  },
-  "fonts": {
-    "family": "DM Sans"
+  "contextual": {
+    "options": [
+      "copy",
+      "download-spec"
+    ]
   }
 }
