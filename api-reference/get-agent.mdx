@@ -1,0 +1,13 @@
+---
+title: "Get agent"
+sidebarTitle: "Get agent"
+description: "GET /api/v1/agents/{id}"
+---
+
+Fetch agent detail. While provisioning, poll `config.provisioning_stages`.
+
+```bash
+curl -sS "$SEAOTTER_API/api/v1/agents/$AGENT_ID" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY" \
+  | jq '{status, stages: .config.provisioning_stages, dashboard_url}'
+```

@@ -1,0 +1,62 @@
+---
+title: "Errors"
+sidebarTitle: "Errors"
+description: "Standard error shape, status codes, and retry guidance."
+---
+
+## Error shape
+
+Almost all failures return JSON:
+
+```json
+{
+  "detail": "Agent not found"
+}
+```
+
+Validation errors (missing/invalid fields) use FastAPI’s list form:
+
+```json
+{
+  "detail": [
+    {
+      "loc": ["body", "name"],
+      "msg": "Field required",
+      "type": "missing"
+    }
+  ]
+}
+```
+
+Unhandled server errors return:
+
+```json
+{
+  "detail": "Internal server error"
+}
+```
+
+## Status codes you will see
+
+| Code | When |
+| --- | --- |
+| `400` | Bad input the schema accepted but the handler rejected |
+| `401` | Missing/invalid Bearer (Clerk JWT or `so_` key) |
+| `402` | Plan capacity exceeded (e.g. too many agents) |
+| `403` | Authenticated but forbidden (member role, Enterprise-only feature) |
+| `404` | Unknown agent, key, or organization |
+| `409` | Conflict with current agent state |
+| `422` | Request body/query failed validation |
+| `429` | Rate limited |
+| `503` | Transient dependency or provision worker failure |
+
+## Retry guidance
+
+| Situation | Guidance |
+| --- | --- |
+| `503` on create / provision path | Safe to retry. Cloud Tasks retries provision workers with backoff; clients may poll `GET /agents/{id}` instead of re-POSTing. |
+| `429` | Back off and retry with jitter; respect plan RPM. |
+| `401` / `403` / `404` / `402` | Do not blind-retry; fix credentials, role, or plan. |
+| `5xx` other than expected 503 | Retry with backoff a few times, then surface to the operator. |
+
+Idempotency: prefer polling an existing agent id over creating duplicates when a create response was lost after the server accepted the write.

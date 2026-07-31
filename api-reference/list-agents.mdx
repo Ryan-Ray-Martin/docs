@@ -1,0 +1,14 @@
+---
+title: "List agents"
+sidebarTitle: "List agents"
+description: "GET /api/v1/agents"
+---
+
+List agents for the active organization (or user ownership when no org is selected).
+
+```bash
+curl -sS "$SEAOTTER_API/api/v1/agents" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY"
+```
+
+Authenticate with a control-plane API key. Full schema: [openapi.public.json](https://seaotter.dev/openapi.public.json).

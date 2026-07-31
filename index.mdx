@@ -1,0 +1,59 @@
+---
+title: "Quickstart"
+description: "Create your first SeaOtter agent and see it running in under five minutes."
+sidebarTitle: "Quickstart"
+---
+
+SeaOtter is a managed control plane for Hermes Agent. This guide gets you from zero to a provisioning agent with a real API key.
+
+## 1. Sign up and create an API key
+
+1. Create an account at [seaotter.dev](https://seaotter.dev).
+2. Open **Settings → API keys** (org admin required).
+3. Create a key and copy the secret once. It looks like `so_…`.
+
+Store it in your shell (never commit it):
+
+```bash
+export SEAOTTER_API_KEY='so_…'
+export SEAOTTER_API='https://seaotter-api-bpenevambq-uc.a.run.app'
+```
+
+## 2. List agents
+
+```bash
+curl -sS "$SEAOTTER_API/api/v1/agents" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY" | jq .
+```
+
+## 3. Create an agent
+
+```bash
+curl -sS -X POST "$SEAOTTER_API/api/v1/agents" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"first-hermes","resource_plan":"starter"}' | jq .
+```
+
+You get a `201` with `status: "provisioning"` almost immediately. Provision continues asynchronously.
+
+## 4. Poll provisioning stages
+
+```bash
+AGENT_ID='<id from create response>'
+
+while true; do
+  curl -sS "$SEAOTTER_API/api/v1/agents/$AGENT_ID" \
+    -H "Authorization: Bearer $SEAOTTER_API_KEY" \
+    | jq '{status, stages: .config.provisioning_stages}'
+  sleep 3
+done
+```
+
+Stages run in fixed order until `wizard_reachable` is `ok` and `status` becomes `running`. See [Provisioning lifecycle](/guides/provisioning-lifecycle) for status meanings.
+
+## Next
+
+- [Authentication](/authentication) — API keys vs Clerk JWTs
+- [API reference](/api-reference) — interactive try-it against production
+- [Upstream Hermes docs](https://hermes-agent.nousresearch.com/docs) — tenant runtime, not the control plane

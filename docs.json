@@ -1,0 +1,116 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "maple",
+  "name": "SeaOtter",
+  "colors": {
+    "primary": "#0089FF",
+    "light": "#00C8C8",
+    "dark": "#0007CD"
+  },
+  "favicon": "/favicon.svg",
+  "navigation": {
+    "pages": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "index",
+          "quickstart"
+        ]
+      }
+    ],
+    "groups": [
+      {
+        "group": "Get started",
+        "pages": [
+          "index",
+          "authentication"
+        ]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+          "guides/provisioning-lifecycle",
+          "guides/errors",
+          "guides/versioning",
+          "guides/changelog"
+        ]
+      },
+      {
+        "group": "API reference",
+        "pages": [
+          "api-reference/overview",
+          "api-reference/list-agents",
+          "api-reference/create-agent",
+          "api-reference/get-agent",
+          "api-reference/create-api-key"
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "navbar": {
+    "links": [
+      {
+        "href": "https://seaotter.dev",
+        "label": "App"
+      },
+      {
+        "href": "https://seaotter.dev/trust",
+        "label": "Trust"
+      },
+      {
+        "href": "https://status.seaotter.dev",
+        "label": "Status"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Dashboard",
+      "href": "https://seaotter.dev/dashboard"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "download-spec"
+    ]
+  },
+  "footer": {
+    "socials": {
+      "website": "https://seaotter.dev"
+    }
+  },
+  "description": "Control plane API for managed Hermes Agent hosting",
+  "api": {
+    "openapi": "https://seaotter-api-bpenevambq-uc.a.run.app/openapi.json",
+    "playground": {
+      "display": "interactive"
+    },
+    "examples": {
+      "languages": [
+        "curl",
+        "python",
+        "javascript"
+      ],
+      "prefill": true
+    },
+    "mdx": {
+      "auth": {
+        "method": "bearer"
+      },
+      "server": "https://seaotter-api-bpenevambq-uc.a.run.app"
+    }
+  },
+  "background": {
+    "color": {
+      "light": "#F4F4F5",
+      "dark": "#0F0F0F"
+    }
+  },
+  "fonts": {
+    "family": "DM Sans"
+  }
+}

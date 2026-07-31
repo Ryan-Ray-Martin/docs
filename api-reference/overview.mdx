@@ -1,0 +1,41 @@
+---
+title: "API overview"
+sidebarTitle: "Overview"
+description: "Interactive reference generated from the SeaOtter OpenAPI schema."
+---
+
+The SeaOtter control plane is documented from the same OpenAPI schema the API serves.
+
+## Base URL
+
+```text
+https://seaotter-api-bpenevambq-uc.a.run.app
+```
+
+Paths in the reference are absolute from that host (for example `/api/v1/agents`).
+
+## Authenticate in the playground
+
+1. Create a control-plane key in **Settings → API keys** (`so_…`).
+2. In any endpoint page, open **Try it** / Authorization.
+3. Set Bearer token to your API key (not a Clerk session JWT).
+
+See [Authentication](/authentication) for when to use API keys vs Clerk.
+
+## Machine-readable schema
+
+- Production: `GET https://seaotter-api-bpenevambq-uc.a.run.app/openapi.json`
+- Public filtered copy: [openapi.public.json](https://seaotter.dev/openapi.public.json)
+
+## Resource groups
+
+| Tag | Resources |
+| --- | --- |
+| `agents` | Provision, operate, backups, credentials, metrics |
+| `billing` | Plans, subscription, checkout, portal |
+| `users` | `/me`, API keys |
+| `organizations` | Active org context |
+| `audit` | Enterprise audit log |
+| `health` | Liveness |
+
+Create an agent and poll stages using the [Quickstart](/) and [Provisioning lifecycle](/guides/provisioning-lifecycle) guides before diving into the full surface.

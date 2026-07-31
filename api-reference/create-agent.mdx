@@ -1,0 +1,18 @@
+---
+title: "Create agent"
+sidebarTitle: "Create agent"
+description: "POST /api/v1/agents"
+---
+
+Creates an agent and enqueues async provision. Returns immediately with `status=provisioning`.
+
+```bash
+curl -sS -X POST "$SEAOTTER_API/api/v1/agents" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"first-hermes","resource_plan":"starter"}'
+```
+
+Poll `GET /api/v1/agents/{id}` and inspect `config.provisioning_stages`. See [Provisioning lifecycle](/guides/provisioning-lifecycle).
+
+Hard provision failures may surface as **503** so Cloud Tasks retries.

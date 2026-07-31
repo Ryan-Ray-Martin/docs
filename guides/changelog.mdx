@@ -1,0 +1,16 @@
+---
+title: "Changelog"
+sidebarTitle: "Changelog"
+description: "Notable changes to the public SeaOtter control-plane API."
+---
+
+## 2026-07-31 — Public developer docs (v1.0.0)
+
+- Published branded docs at [docs.seaotter.dev](https://docs.seaotter.dev) from the live OpenAPI schema.
+- Control-plane API keys (`so_…`) authenticate as Bearer tokens alongside Clerk JWTs.
+- OpenAPI now documents `config.provisioning_stages`, typed metrics/logs responses, and standard error responses.
+- Internal worker and webhook routes are excluded from the public schema.
+
+## Earlier
+
+The `/api/v1` agents, billing, users/keys, organizations, and audit surfaces described in the reference were already live in production prior to this docs launch. Treat this entry as the start of the customer-facing changelog.

@@ -1,0 +1,57 @@
+---
+title: "Authentication"
+sidebarTitle: "Authentication"
+description: "When to use control-plane API keys vs Clerk session JWTs."
+---
+
+Every authenticated control-plane request uses:
+
+```http
+Authorization: Bearer <token>
+```
+
+SeaOtter accepts two bearer types on the same header.
+
+## Control-plane API keys (`so_…`)
+
+**Use for:** scripts, CI, SDKs, and the interactive playground on this docs site.
+
+|  |  |
+| --- | --- |
+| Create | `POST /api/v1/api-keys` (org admin) while signed into the web app, or via Settings |
+| Shape | `so_` \+ random secret; returned once in `secret` |
+| Scope | Bound to the organization that created the key |
+| Rights | Treated as org admin for mutate routes on that org |
+| Revoke | `DELETE /api/v1/api-keys/{id}` |
+
+```bash
+curl -sS "$SEAOTTER_API/api/v1/me" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY"
+```
+
+Do not put API keys in frontend JavaScript or public repos.
+
+## Clerk session JWT
+
+**Use for:** the SeaOtter web app at seaotter.dev only.
+
+|  |  |
+| --- | --- |
+| Issuer | `https://clerk.seaotter.dev` (RS256 via JWKS) |
+| Org claims | Nested `o.id` / `o.rol` when an organization is active |
+| Mutate routes | Require `org:admin` (members are read-only) |
+| Users | Created JIT on first successful JWT (`sub` → `users.clerk_id`) |
+
+Clerk cookies and short-lived session tokens are not for scripts or the docs playground. Generate an API key instead.
+
+## What not to mix up
+
+| Credential | Surface |
+| --- | --- |
+| `so_…` control-plane key | SeaOtter API (`/api/v1/*`) |
+| Clerk JWT | SeaOtter web → API |
+| Hermes dashboard password / tenant API key | Per-agent Hermes UI/API on `*.agents.seaotter.dev` — reveal via `POST /agents/{id}/credentials/reveal` |
+
+## Errors
+
+Missing or invalid bearer → `401` with `{"detail":"…"}`. See [Errors](/guides/errors).

@@ -1,0 +1,17 @@
+---
+title: "Create API key"
+sidebarTitle: "Create API key"
+description: "POST /api/v1/api-keys"
+---
+
+Creates an org-scoped control-plane API key. The full secret (`so_…`) is returned **once** in `secret`.
+
+Creating keys requires a Clerk session (Settings UI or Bearer JWT) with org admin. After that, use the `so_` key for scripts and the docs playground.
+
+```bash
+# While authenticated with a Clerk JWT:
+curl -sS -X POST "$SEAOTTER_API/api/v1/api-keys" \
+  -H "Authorization: Bearer $CLERK_JWT" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"docs-try-it"}'
+```

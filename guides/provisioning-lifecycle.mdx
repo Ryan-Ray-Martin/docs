@@ -1,0 +1,97 @@
+---
+title: "Provisioning lifecycle"
+sidebarTitle: "Provisioning lifecycle"
+description: "How config.provisioning_stages progress from namespace to a reachable Hermes wizard."
+---
+
+Creating an agent is asynchronous. `POST /api/v1/agents` inserts a row with `status=provisioning`, seeds URLs, enqueues work, and returns in about a second. The worker then walks a **strict, ordered** set of readiness gates stored on the agent:
+
+```text
+config.provisioning_stages
+```
+
+Poll `GET /api/v1/agents/{id}` until stages complete and `status` is `running` (or `error`).
+
+## Stage order
+
+| Stage | Meaning |
+| --- | --- |
+| `namespace_created` | Per-agent Kubernetes namespace exists |
+| `helm_installed` | Hermes chart applied |
+| `pod_ready` | Deployment replicas ready and pod Ready (API \+ dashboard) |
+| `sandbox_verified` | gVisor runtime confirmed when `config.sandbox=gvisor`; skipped when sandboxing is off |
+| `dns_resolvable` | Public hostname has an A record |
+| `tls_valid` | Shared wildcard TLS acknowledged (often completes quickly / may be `skipped` as a per-tenant wait) |
+| `wizard_reachable` | HTTPS reachability hard gate on the dashboard host |
+
+Stages are **not** parallel. Later stages stay `pending` until earlier ones succeed.
+
+## Status values
+
+Each stage object looks like:
+
+```json
+{
+  "status": "waiting",
+  "ms": 12000,
+  "detail": "waiting for Ready",
+  "host": "my-hermes-abcd1234.agents.seaotter.dev"
+}
+```
+
+| Status | Meaning |
+| --- | --- |
+| `pending` | Not started yet |
+| `waiting` | In progress / retrying (transient) |
+| `ok` | Gate passed |
+| `error` | Gate failed after retries; agent may move to `status=error` |
+| `skipped` | Not applicable for this agent (e.g. sandbox disabled, TLS ack path) |
+
+Treat coral/`error` as terminal for that attempt. Amber/`waiting` is normal during Autopilot pull, DNS, and HTTP backoff.
+
+## Worked polling example
+
+```bash
+export SEAOTTER_API='https://seaotter-api-bpenevambq-uc.a.run.app'
+export SEAOTTER_API_KEY='so_…'
+AGENT_ID='…'
+
+poll() {
+  curl -sS "$SEAOTTER_API/api/v1/agents/$AGENT_ID" \
+    -H "Authorization: Bearer $SEAOTTER_API_KEY"
+}
+
+# Create
+AGENT_ID=$(curl -sS -X POST "$SEAOTTER_API/api/v1/agents" \
+  -H "Authorization: Bearer $SEAOTTER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"lifecycle-demo"}' | jq -r .id)
+
+# Poll until wizard_reachable is ok or agent errors
+for i in $(seq 1 80); do
+  body=$(poll)
+  status=$(echo "$body" | jq -r .status)
+  wizard=$(echo "$body" | jq -r '.config.provisioning_stages.wizard_reachable.status // "pending"')
+  echo "[$i] agent=$status wizard=$wizard"
+  echo "$body" | jq -c '.config.provisioning_stages'
+  if [ "$wizard" = "ok" ] || [ "$status" = "error" ]; then
+    break
+  fi
+  sleep 3
+done
+```
+
+Typical wall time is a few minutes (image pull \+ PVC \+ DNS \+ HTTP gate). The product UI shows a similar poll cadence (~2.5s).
+
+## Retries and reprovision
+
+- Hard failures during provision may return **503** from the worker so Cloud Tasks retries with backoff.
+- After a sticky error, owners can call `POST /api/v1/agents/{id}/reprovision` to re-enqueue.
+- Restore flows add `restore_*` keys alongside the create stages; hostname stays the same.
+
+## After success
+
+When `status` is `running`:
+
+- Open `dashboard_url` (basic auth — reveal password with `POST …/credentials/reveal`)
+- Call the tenant Hermes API at `api_url` with the tenant API key (not your `so_` control-plane key)
