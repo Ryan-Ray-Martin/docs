@@ -2,7 +2,7 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "SeaOtter",
-  "description": "Control plane API for managed Hermes Agent hosting",
+  "description": "SeaOtter control plane API for managed Hermes Agent hosting",
   "colors": {
     "primary": "#0089FF",
     "light": "#00C8C8",
