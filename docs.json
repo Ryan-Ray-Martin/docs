@@ -8,10 +8,10 @@
     "light": "#00C8C8",
     "dark": "#0007CD"
   },
-  "favicon": "https://seaotter.dev/favicon.ico",
+  "favicon": "https://seaotter.dev/brand/sea-otter-logo-chip.png",
   "logo": {
-    "light": "https://seaotter.dev/brand/sea-otter-logo-light.png",
-    "dark": "https://seaotter.dev/brand/sea-otter-logo-dark.png",
+    "light": "https://seaotter.dev/brand/sea-otter-logo-chip.png",
+    "dark": "https://seaotter.dev/brand/sea-otter-logo-mark.png",
     "href": "https://seaotter.dev"
   },
   "fonts": {
