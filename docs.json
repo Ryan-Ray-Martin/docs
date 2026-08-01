@@ -95,7 +95,8 @@
               "api-reference/create-api-key"
             ]
           }
-        ]
+        ],
+        "openapi": "openapi.json"
       }
     ]
   },
