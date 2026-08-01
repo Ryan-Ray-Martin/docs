@@ -1,7 +1,6 @@
 ---
-title: "Versioning & deprecation"
-sidebarTitle: "Versioning"
-description: "What the /api/v1 prefix commits to."
+title: Versioning & deprecation
+description: What the /api/v1 prefix commits to.
 ---
 
 ## Current surface
@@ -9,7 +8,7 @@ description: "What the /api/v1 prefix commits to."
 All customer control-plane routes live under:
 
 ```text
-https://seaotter-api-bpenevambq-uc.a.run.app/api/v1
+https://api.seaotter.dev/api/v1
 ```
 
 `GET /health` is unversioned (liveness only).
@@ -19,7 +18,7 @@ https://seaotter-api-bpenevambq-uc.a.run.app/api/v1
 **`/api/v1` is the stable surface.**
 
 | Change | Policy |
-| --- | --- |
+|---|---|
 | New endpoints, optional fields, additive enum values | Non-breaking; ship anytime |
 | Renaming/removing fields, changing types, stricter validation that rejects previously valid requests | Breaking |
 | Breaking changes | New major prefix (`/api/v2`) **or** ≥ **90 days** deprecation notice in release notes / OpenAPI `deprecated` flags |

@@ -1,7 +1,6 @@
 ---
-title: "Provisioning lifecycle"
-sidebarTitle: "Provisioning lifecycle"
-description: "How config.provisioning_stages progress from namespace to a reachable Hermes wizard."
+title: Provisioning lifecycle
+description: How config.provisioning_stages progress from namespace to a reachable Hermes wizard.
 ---
 
 Creating an agent is asynchronous. `POST /api/v1/agents` inserts a row with `status=provisioning`, seeds URLs, enqueues work, and returns in about a second. The worker then walks a **strict, ordered** set of readiness gates stored on the agent:
@@ -15,10 +14,10 @@ Poll `GET /api/v1/agents/{id}` until stages complete and `status` is `running` (
 ## Stage order
 
 | Stage | Meaning |
-| --- | --- |
+|---|---|
 | `namespace_created` | Per-agent Kubernetes namespace exists |
 | `helm_installed` | Hermes chart applied |
-| `pod_ready` | Deployment replicas ready and pod Ready (API \+ dashboard) |
+| `pod_ready` | Deployment replicas ready and pod Ready (API + dashboard) |
 | `sandbox_verified` | gVisor runtime confirmed when `config.sandbox=gvisor`; skipped when sandboxing is off |
 | `dns_resolvable` | Public hostname has an A record |
 | `tls_valid` | Shared wildcard TLS acknowledged (often completes quickly / may be `skipped` as a per-tenant wait) |
@@ -40,7 +39,7 @@ Each stage object looks like:
 ```
 
 | Status | Meaning |
-| --- | --- |
+|---|---|
 | `pending` | Not started yet |
 | `waiting` | In progress / retrying (transient) |
 | `ok` | Gate passed |
@@ -52,7 +51,7 @@ Treat coral/`error` as terminal for that attempt. Amber/`waiting` is normal duri
 ## Worked polling example
 
 ```bash
-export SEAOTTER_API='https://seaotter-api-bpenevambq-uc.a.run.app'
+export SEAOTTER_API='https://api.seaotter.dev'
 export SEAOTTER_API_KEY='so_…'
 AGENT_ID='…'
 
@@ -81,7 +80,7 @@ for i in $(seq 1 80); do
 done
 ```
 
-Typical wall time is a few minutes (image pull \+ PVC \+ DNS \+ HTTP gate). The product UI shows a similar poll cadence (~2.5s).
+Typical wall time is a few minutes (image pull + PVC + DNS + HTTP gate). The product UI shows a similar poll cadence (~2.5s).
 
 ## Retries and reprovision
 
