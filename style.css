@@ -1,0 +1,15 @@
+/* SeaOtter docs — larger brand mark in chrome */
+nav-logo img,
+nav-logo svg,
+#navbar nav-logo img,
+a[data-component-name="nav-logo"] img {
+  height: 40px !important;
+  width: auto !important;
+  max-height: 40px !important;
+}
+
+/* Keep mark crisp; chip already includes the void-black plate */
+nav-logo {
+  display: inline-flex;
+  align-items: center;
+}
