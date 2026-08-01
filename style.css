@@ -1,15 +1,24 @@
-/* SeaOtter docs — larger brand mark in chrome */
-nav-logo img,
-nav-logo svg,
-#navbar nav-logo img,
-a[data-component-name="nav-logo"] img {
-  height: 40px !important;
-  width: auto !important;
-  max-height: 40px !important;
+/* SeaOtter docs — prominent brand mark (black chip in light mode) */
+nav-logo,
+nav-logo a,
+#navbar nav-logo,
+[data-component-name="nav-logo"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  height: 48px !important;
 }
 
-/* Keep mark crisp; chip already includes the void-black plate */
-nav-logo {
-  display: inline-flex;
-  align-items: center;
+nav-logo img,
+nav-logo svg,
+nav-logo a img,
+#navbar nav-logo img,
+#navbar img[alt="SeaOtter"],
+#navbar img[src*="sea-otter-logo"],
+a img[src*="sea-otter-logo-chip"],
+a img[src*="sea-otter-logo-mark"] {
+  height: 48px !important;
+  width: 48px !important;
+  max-height: 48px !important;
+  max-width: 48px !important;
+  object-fit: contain !important;
 }
