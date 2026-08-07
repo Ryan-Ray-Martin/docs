@@ -1,0 +1,33 @@
+---
+title: "Regions"
+sidebarTitle: "Regions"
+description: "Where SeaOtter runs today and which GCP regions are Coming soon."
+---
+
+SeaOtter is hosted on **Google Cloud**. The control plane (API \+ database) and the live agent data plane both run in **Iowa (`us-central1`).**
+
+## Live today
+
+| Layer | Region |
+| --- | --- |
+| Control plane (API, Cloud SQL) | `us-central1` |
+| Agent data plane (GKE Autopilot) | `us-central1` |
+
+When you create an agent, it is provisioned in the region you select. Today only **Iowa** is available.
+
+## Coming soon
+
+These GCP regions appear in the catalog as **Coming soon** until a data-plane cluster is online:
+
+- South Carolina (`us-east1`)
+- Belgium (`europe-west1`)
+- Singapore (`asia-southeast1`)
+
+AWS and Azure are placeholders in the cloud picker — not live partners yet.
+
+## What this is not
+
+- **Not** active-active multi-region HA for a single agent
+- **Not** automated failover of the control plane out of `us-central1`
+
+See [Trust](https://seaotter.dev/trust) for the honest availability posture.

@@ -98,6 +98,35 @@
         ],
         "openapi": "openapi.json"
       }
+    ],
+    "groups": [
+      {
+        "group": "Get started",
+        "pages": [
+          "index",
+          "authentication"
+        ]
+      },
+      {
+        "group": "Concepts",
+        "pages": [
+          "guides/provisioning-lifecycle",
+          "guides/regions",
+          "guides/errors",
+          "guides/versioning",
+          "guides/changelog"
+        ]
+      },
+      {
+        "group": "API reference",
+        "pages": [
+          "api-reference/overview",
+          "api-reference/list-agents",
+          "api-reference/create-agent",
+          "api-reference/get-agent",
+          "api-reference/create-api-key"
+        ]
+      }
     ]
   },
   "contextual": {
