@@ -4,6 +4,12 @@ sidebarTitle: "Changelog"
 description: "Notable changes to the public SeaOtter control-plane API."
 ---
 
+## 2026-08-16 — Write-only Secrets tab
+
+- Agent **Secrets** tab is the write-only path for integration API keys (add / replace / delete). Values are never shown again after save.
+- Config rejects secret-like keys; use Secrets (or MCP `upsert_secret`) instead.
+- Operator guide: [Secrets](/guides/secrets).
+
 ## 2026-08-07 — Single live data plane
 
 - Agent data plane is **`us-central1` only** (Iowa). Other GCP regions remain listed as **Coming soon** until demand justifies idle multi-region cost.
