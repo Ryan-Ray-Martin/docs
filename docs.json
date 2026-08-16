@@ -75,6 +75,7 @@
             "group": "Concepts",
             "pages": [
               "guides/provisioning-lifecycle",
+              "guides/secrets",
               "guides/errors",
               "guides/versioning",
               "guides/changelog"
