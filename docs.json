@@ -72,6 +72,17 @@
             ]
           },
           {
+            "group": "Connect from chat",
+            "pages": [
+              "mcp/index",
+              "mcp/cursor",
+              "mcp/claude",
+              "mcp/codex",
+              "mcp/tools",
+              "mcp/security"
+            ]
+          },
+          {
             "group": "Concepts",
             "pages": [
               "guides/provisioning-lifecycle",

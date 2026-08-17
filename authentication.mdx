@@ -12,16 +12,17 @@ Authorization: Bearer <token>
 
 SeaOtter accepts two bearer types on the same header.
 
-## Control-plane API keys (`so_…`)
+## SeaOtter access keys (`so_…`)
 
-**Use for:** scripts, CI, SDKs, and the interactive playground on this docs site.
+**Use for:** scripts, CI, SDKs, MCP (`SEAOTTER_API_KEY`), and the interactive playground on this docs site.
 
 |  |  |
 | --- | --- |
-| Create | `POST /api/v1/api-keys` (org admin) while signed into the web app, or via Settings |
+| Create | `POST /api/v1/api-keys` (workspace admin) while signed into the web app, Connect, or Settings |
 | Shape | `so_` \+ random secret; returned once in `secret` |
-| Scope | Bound to the organization that created the key |
+| Scope | Bound to the organization / personal workspace that created the key |
 | Rights | Treated as org admin for mutate routes on that org |
+| Transport | Same value as `Authorization: Bearer so_…` and MCP `SEAOTTER_API_KEY` |
 | Revoke | `DELETE /api/v1/api-keys/{id}` |
 
 ```bash
@@ -30,6 +31,16 @@ curl -sS "$SEAOTTER_API/api/v1/me" \
 ```
 
 Do not put API keys in frontend JavaScript or public repos.
+
+### Use with MCP
+
+The [`@ryanseaotter/mcp-server`](/mcp) package reads the key from the MCP server environment:
+
+```bash
+SEAOTTER_API_KEY='so_…'
+```
+
+See [Connect from chat](/mcp) for Claude, Cursor, and Codex config snippets. Never commit the key into `.cursor/mcp.json` in a shared repo — use a local or user-level config.
 
 ## Clerk session JWT
 
@@ -48,9 +59,9 @@ Clerk cookies and short-lived session tokens are not for scripts or the docs pla
 
 | Credential | Surface |
 | --- | --- |
-| `so_…` control-plane key | SeaOtter API (`/api/v1/*`) |
+| SeaOtter access key (`so_…`) | `/api/v1/*` Bearer **and** MCP `SEAOTTER_API_KEY` |
 | Clerk JWT | SeaOtter web → API |
-| Hermes dashboard password / tenant API key | Per-agent Hermes UI/API on `*.agents.seaotter.dev` — reveal via `POST /agents/{id}/credentials/reveal` |
+| Hermes runtime credential (`api_server_key`) | Per-agent Hermes `/v1` on `*.agents.seaotter.dev` — revealed/fetched after `so_…` auth |
 
 ## Errors
 

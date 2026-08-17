@@ -1,0 +1,43 @@
+---
+title: "Cursor"
+description: "Add the SeaOtter MCP server to Cursor in one click or via .cursor/mcp.json."
+---
+
+Prefer [seaotter.dev/connect](https://seaotter.dev/connect) — **Add to Cursor** opens a one-click install deeplink with your key filled in.
+
+## One-click (recommended)
+
+1. Open [seaotter.dev/connect](https://seaotter.dev/connect) while signed in.
+2. Click **Add to Cursor**.
+3. Approve the install in Cursor.
+
+You’re done when SeaOtter appears under MCP servers. Then paste:
+
+> Use the SeaOtter MCP to onboard a Hermes agent named my-hermes, then talk to it.
+
+## Manual `.cursor/mcp.json`
+
+If the deeplink didn’t open, create or edit `.cursor/mcp.json` (project or global):
+
+```json
+{
+  "mcpServers": {
+    "seaotter": {
+      "command": "npx",
+      "args": ["-y", "@ryanseaotter/mcp-server"],
+      "env": {
+        "SEAOTTER_API_KEY": "so_…"
+      }
+    }
+  }
+}
+```
+
+Reload MCP after changing `SEAOTTER_API_KEY`: Cursor Settings → MCP → toggle **seaotter** off/on, or Command Palette → **Developer: Reload Window**. You do **not** need to restart Cursor to pick up a rotated Hermes runtime key — `talk_to_hermes_agent` refreshes that automatically.
+
+## Notes
+
+- Package on npm: `@ryanseaotter/mcp-server` (official SeaOtter MCP).
+- Keep `SEAOTTER_API_KEY` out of git — use Cursor’s env field or a local config.
+- Optional: `SEAOTTER_API` for a non-production control plane.
+- See [Connect from chat](/mcp) for the full flow.

@@ -8,6 +8,7 @@ description: "Notable changes to the public SeaOtter control-plane API."
 
 - Agent **Secrets** tab and MCP `upsert_secret` remain write-only. Values are never shown again after save.
 - Integration keys are stored in Google Secret Manager. Hermes loads them at startup as environment variables so tools can use them.
+- Follows the Hermes-recommended secret-source path: provider keys are **not** stored in `.env`. See [Hermes Secrets](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/).
 - Running agents still restart after save so Hermes picks up a new or replaced key.
 - Operator guide: [Secrets](/guides/secrets).
 
