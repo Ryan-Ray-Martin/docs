@@ -369,6 +369,85 @@
         }
       }
     },
+    "/api/v1/agents/{agent_id}/dashboard-reachability": {
+      "get": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Probe Hermes dashboard",
+        "description": "Control-plane HTTP probe of the tenant dashboard URL. Non-5xx means reachable (auth gates count as ready). When reachable, clears `dashboard_warming` so the UI can re-enable Open Hermes after secret apply / restart / credential rotate.",
+        "operationId": "dashboard_reachability_api_v1_agents__agent_id__dashboard_reachability_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Agent Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardReachabilityOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token (Clerk JWT or so_ API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not permitted (role or plan gate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/agents/{agent_id}/reprovision": {
       "post": {
         "tags": [
@@ -1175,7 +1254,8 @@
         "tags": [
           "agents"
         ],
-        "summary": "Upsert Secret",
+        "summary": "Upsert secret",
+        "description": "Store an integration secret in Google Secret Manager and record a `gsm:` ref on the agent. Re-PUTting the same key adds a new GSM version (rotate). Hermes loads the key at startup as an environment variable. Running agents restart so the new mapping is applied; paused/stopped agents pick it up on next start. Returns operation_id; `pending_reconcile` means desired state is durable and safe to retry via reconcile.",
         "operationId": "upsert_secret_api_v1_agents__agent_id__secrets_put",
         "security": [
           {
@@ -1211,6 +1291,520 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SecretUpsertOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token (Clerk JWT or so_ API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not permitted (role or plan gate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Plan capacity or billing required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict with current agent state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Transient failure \u2014 Cloud Tasks will retry where applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agents/{agent_id}/secrets/{key}": {
+      "delete": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Delete secret",
+        "description": "Remove a `gsm:`-backed integration secret: drop the env ref, rollout without the key, then delete the exact referenced GSM secret. IAM dies with the secret. Partial failures return `pending_reconcile` for safe retry.",
+        "operationId": "delete_secret_api_v1_agents__agent_id__secrets__key__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretDeleteOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token (Clerk JWT or so_ API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not permitted (role or plan gate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Plan capacity or billing required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict with current agent state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Transient failure \u2014 Cloud Tasks will retry where applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agents/{agent_id}/secret-operations/{operation_id}": {
+      "get": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Get secret operation status",
+        "operationId": "get_secret_operation_api_v1_agents__agent_id__secret_operations__operation_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Operation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretOperationOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token (Clerk JWT or so_ API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not permitted (role or plan gate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Plan capacity or billing required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict with current agent state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Transient failure \u2014 Cloud Tasks will retry where applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agents/{agent_id}/secret-operations/{operation_id}/reconcile": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Reconcile secret operation",
+        "description": "Retry only the persisted stage of a pending/failed secret operation. Never adds another secret version.",
+        "operationId": "reconcile_secret_operation_api_v1_agents__agent_id__secret_operations__operation_id__reconcile_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Agent Id"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Operation Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SecretOperationOut"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token (Clerk JWT or so_ API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not permitted (role or plan gate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Resource not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "402": {
+            "description": "Plan capacity or billing required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict with current agent state",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Transient failure \u2014 Cloud Tasks will retry where applicable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/agents/{agent_id}/exec": {
+      "post": {
+        "tags": [
+          "agents"
+        ],
+        "summary": "Exec hermes CLI",
+        "description": "Run an allowlisted `hermes <argv\u2026>` command inside the agent pod as an argv array (never a shell string). Tier-3 destructive commands require `confirm=true`. `--yolo` is never accepted. Every invocation is audit-logged.",
+        "operationId": "exec_hermes_command_api_v1_agents__agent_id__exec_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "agent_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Agent Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AgentExecIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentExecOut"
                 }
               }
             }
@@ -1405,6 +1999,30 @@
                   },
                   "type": "object",
                   "title": "Response List Plans Api V1 Billing Plans Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/catalog": {
+      "get": {
+        "tags": [
+          "billing"
+        ],
+        "summary": "Billing Catalog",
+        "description": "Aiven-style catalog: clouds \u2192 regions \u2192 plans/sizes (GCP labeled).",
+        "operationId": "billing_catalog_api_v1_billing_catalog_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Billing Catalog Api V1 Billing Catalog Get"
                 }
               }
             }
@@ -1678,7 +2296,7 @@
           "users"
         ],
         "summary": "Create API key",
-        "description": "Creates an org-scoped control-plane API key. The full secret (`so_\u2026`) is returned once in `secret`. Use it as `Authorization: Bearer so_\u2026` for programmatic access and the docs try-it console.",
+        "description": "Creates an organization-scoped SeaOtter access key (`so_\u2026`). The full secret is returned once in `secret`. Use it as `Authorization: Bearer so_\u2026` for `/api/v1` and as `SEAOTTER_API_KEY` for the MCP server. MCP purposes keep one active key per client (`mcp:cursor`, `mcp:claude`, `mcp:codex`).",
         "operationId": "create_key_api_v1_api_keys_post",
         "requestBody": {
           "content": {
@@ -1804,6 +2422,54 @@
                     }
                   ],
                   "title": "Response Current Org Api V1 Organizations Me Get"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid Bearer token (Clerk JWT or so_ API key)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Authenticated but not permitted (role or plan gate)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorBody"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/organizations/personal-workspace": {
+      "post": {
+        "tags": [
+          "organizations",
+          "organizations"
+        ],
+        "summary": "Ensure personal Hobby workspace",
+        "description": "Creates or returns the caller's one-seat personal Clerk organization and reassigns any legacy user-scoped agents, API keys, and subscriptions onto it. Activate the returned ``clerk_org_id`` in the Clerk session before calling organization-scoped APIs.",
+        "operationId": "bootstrap_personal_workspace_api_v1_organizations_personal_workspace_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PersonalWorkspaceOut"
                 }
               }
             }
@@ -2322,10 +2988,28 @@
           },
           "resource_plan": {
             "$ref": "#/components/schemas/ResourcePlan",
-            "description": "Plan tier: starter | pro | enterprise (CPU/memory/storage from PLAN_QUOTAS)",
-            "default": "starter",
+            "description": "Plan size: hobby | startup | business | enterprise (CPU/memory/storage from PLAN_QUOTAS)",
+            "default": "hobby",
             "examples": [
-              "starter"
+              "hobby"
+            ]
+          },
+          "cloud": {
+            "type": "string",
+            "title": "Cloud",
+            "description": "Cloud partner id (only gcp is available today)",
+            "default": "gcp",
+            "examples": [
+              "gcp"
+            ]
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "description": "GCP region for the agent data plane",
+            "default": "us-central1",
+            "examples": [
+              "us-central1"
             ]
           },
           "env_vars": {
@@ -2421,6 +3105,85 @@
         "type": "object",
         "title": "AgentCredentialsOut",
         "description": "Sensitive Hermes credentials \u2014 only via authenticated reveal."
+      },
+      "AgentExecIn": {
+        "properties": {
+          "argv": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 32,
+            "minItems": 1,
+            "title": "Argv",
+            "description": "Arguments after the hermes binary, e.g. [\"status\"] or [\"config\",\"show\"]",
+            "examples": [
+              [
+                "status"
+              ]
+            ]
+          },
+          "confirm": {
+            "type": "boolean",
+            "title": "Confirm",
+            "description": "Required true for tier-3 destructive commands",
+            "default": false
+          },
+          "timeout_seconds": {
+            "type": "integer",
+            "maximum": 300.0,
+            "minimum": 1.0,
+            "title": "Timeout Seconds",
+            "default": 60
+          }
+        },
+        "type": "object",
+        "required": [
+          "argv"
+        ],
+        "title": "AgentExecIn",
+        "description": "Run an allowlisted `hermes <argv\u2026>` command in the agent pod (no shell)."
+      },
+      "AgentExecOut": {
+        "properties": {
+          "exit_code": {
+            "type": "integer",
+            "title": "Exit Code"
+          },
+          "stdout": {
+            "type": "string",
+            "title": "Stdout"
+          },
+          "stderr": {
+            "type": "string",
+            "title": "Stderr"
+          },
+          "argv": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Argv"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "title": "Duration Ms"
+          },
+          "tier": {
+            "type": "integer",
+            "title": "Tier"
+          }
+        },
+        "type": "object",
+        "required": [
+          "exit_code",
+          "stdout",
+          "stderr",
+          "argv",
+          "duration_ms",
+          "tier"
+        ],
+        "title": "AgentExecOut"
       },
       "AgentLogsOut": {
         "properties": {
@@ -2578,10 +3341,23 @@
           "resource_plan": {
             "$ref": "#/components/schemas/ResourcePlan"
           },
+          "cloud": {
+            "type": "string",
+            "title": "Cloud",
+            "description": "Cloud partner id",
+            "default": "gcp"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region",
+            "description": "Data-plane region",
+            "default": "us-central1"
+          },
           "env_vars": {
             "additionalProperties": true,
             "type": "object",
-            "title": "Env Vars"
+            "title": "Env Vars",
+            "description": "Role-aware env metadata. Members: empty. Admins/API keys: key \u2192 `gsm` | `configured` (never plaintext or full gsm: resource ids)."
           },
           "config": {
             "anyOf": [
@@ -2674,6 +3450,18 @@
               }
             ],
             "title": "Hostname"
+          },
+          "dashboard_warming": {
+            "type": "boolean",
+            "title": "Dashboard Warming",
+            "description": "True while the Hermes dashboard may be briefly unavailable after a pod restart (secrets, Restart, credential rotate). Poll GET /agents/{id}/dashboard-reachability until clear.",
+            "default": false
+          },
+          "credential_rotation_pending": {
+            "type": "boolean",
+            "title": "Credential Rotation Pending",
+            "description": "True while a credential rotation is still converging onto the live Hermes gateway. Prefer waiting / retrying talk rather than assuming the revealed key is already accepted.",
+            "default": false
           }
         },
         "type": "object",
@@ -2730,7 +3518,8 @@
                 "type": "null"
               }
             ],
-            "title": "Env Vars"
+            "title": "Env Vars",
+            "description": "Non-secret env only. Keys that look like secrets (API_KEY, TOKEN, PASSWORD, \u2026) must use PUT /agents/{id}/secrets. gsm: refs are preserved."
           },
           "config": {
             "anyOf": [
@@ -2891,6 +3680,17 @@
             "examples": [
               "ci-deploy"
             ]
+          },
+          "purpose": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^(general|mcp:(cursor|claude|codex))$",
+            "title": "Purpose",
+            "description": "Stable client purpose; MCP purposes retain one active key",
+            "default": "general",
+            "examples": [
+              "mcp:cursor"
+            ]
           }
         },
         "type": "object",
@@ -2910,6 +3710,10 @@
             "type": "string",
             "title": "Name"
           },
+          "purpose": {
+            "type": "string",
+            "title": "Purpose"
+          },
           "key_prefix": {
             "type": "string",
             "title": "Key Prefix",
@@ -2919,6 +3723,18 @@
             "type": "string",
             "format": "date-time",
             "title": "Created At"
+          },
+          "last_used_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Used At"
           },
           "secret": {
             "anyOf": [
@@ -2940,6 +3756,7 @@
         "required": [
           "id",
           "name",
+          "purpose",
           "key_prefix",
           "created_at"
         ],
@@ -3066,7 +3883,48 @@
         "properties": {
           "plan": {
             "$ref": "#/components/schemas/PlanTier",
-            "default": "starter"
+            "default": "hobby"
+          },
+          "client_reference_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 200
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Client Reference Id",
+            "description": "Affiliate / referral id (Stripe client_reference_id)"
+          },
+          "promotion_code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Promotion Code",
+            "description": "Optional Stripe promotion code to apply at checkout"
+          },
+          "attribution": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Attribution",
+            "description": "First-touch UTM / ad click IDs (utm_*, gclid, rdt_cid, fbclid) merged into Stripe Checkout + subscription metadata"
           }
         },
         "type": "object",
@@ -3143,6 +4001,39 @@
         ],
         "title": "DashboardAuthUpdate",
         "description": "Update Hermes dashboard basic-auth credentials (injected as HERMES_DASHBOARD_BASIC_AUTH_*)."
+      },
+      "DashboardReachabilityOut": {
+        "properties": {
+          "reachable": {
+            "type": "boolean",
+            "title": "Reachable",
+            "description": "True when dashboard returns non-5xx"
+          },
+          "warming": {
+            "type": "boolean",
+            "title": "Warming",
+            "description": "True when a recent restart still has the warming flag set"
+          },
+          "http_status": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Http Status",
+            "description": "Last HTTP status from the probe, if any"
+          }
+        },
+        "type": "object",
+        "required": [
+          "reachable",
+          "warming"
+        ],
+        "title": "DashboardReachabilityOut",
+        "description": "Result of probing the tenant Hermes dashboard URL."
       },
       "ErrorBody": {
         "properties": {
@@ -3333,6 +4224,28 @@
           "can_mutate": {
             "type": "boolean",
             "title": "Can Mutate"
+          },
+          "entitled": {
+            "type": "boolean",
+            "title": "Entitled",
+            "description": "True when org has active/trialing subscription or Enterprise sales override",
+            "default": false
+          },
+          "subscription_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SubscriptionStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "is_personal": {
+            "type": "boolean",
+            "title": "Is Personal",
+            "description": "True when this organization is the caller's one-seat Hobby workspace",
+            "default": false
           }
         },
         "type": "object",
@@ -3345,12 +4258,63 @@
         ],
         "title": "OrganizationMeOut"
       },
+      "PersonalWorkspaceOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "clerk_org_id": {
+            "type": "string",
+            "title": "Clerk Org Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          },
+          "created": {
+            "type": "boolean",
+            "title": "Created",
+            "default": false
+          },
+          "reassigned": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Reassigned",
+            "description": "Counts of legacy user-scoped resources moved onto this workspace"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "clerk_org_id",
+          "name"
+        ],
+        "title": "PersonalWorkspaceOut"
+      },
       "PlanTier": {
         "type": "string",
         "enum": [
+          "hobby",
+          "startup",
+          "business",
+          "enterprise",
           "starter",
-          "pro",
-          "enterprise"
+          "pro"
         ],
         "title": "PlanTier"
       },
@@ -3424,9 +4388,12 @@
       "ResourcePlan": {
         "type": "string",
         "enum": [
+          "hobby",
+          "startup",
+          "business",
+          "enterprise",
           "starter",
-          "pro",
-          "enterprise"
+          "pro"
         ],
         "title": "ResourcePlan"
       },
@@ -3446,20 +4413,163 @@
         "title": "RestoreBody",
         "description": "Restore hermes-home from a recorded backup (VolumeSnapshot name or backup row id)."
       },
-      "SecretUpsert": {
+      "SecretDeleteOut": {
         "properties": {
           "key": {
             "type": "string",
             "title": "Key",
-            "description": "Env var name",
+            "description": "Env var name that was removed"
+          },
+          "deleted": {
+            "type": "boolean",
+            "title": "Deleted",
+            "default": true
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operation Id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "applied"
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key"
+        ],
+        "title": "SecretDeleteOut"
+      },
+      "SecretOperationOut": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Id"
+          },
+          "agent_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Agent Id"
+          },
+          "key": {
+            "type": "string",
+            "title": "Key"
+          },
+          "secret_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secret Ref",
+            "description": "GSM secret id (never a plaintext value)"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "stage": {
+            "type": "string",
+            "title": "Stage"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Code"
+          },
+          "attempt_count": {
+            "type": "integer",
+            "title": "Attempt Count",
+            "default": 1
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "agent_id",
+          "key",
+          "action",
+          "stage",
+          "status"
+        ],
+        "title": "SecretOperationOut"
+      },
+      "SecretUpsert": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "maxLength": 128,
+            "pattern": "^[A-Z_][A-Z0-9_]{0,127}$",
+            "title": "Key",
+            "description": "Portable env name matching ^[A-Z_][A-Z0-9_]{0,127}$",
             "examples": [
               "OPENAI_API_KEY"
             ]
           },
           "value": {
             "type": "string",
+            "maxLength": 65536,
+            "minLength": 1,
             "title": "Value",
-            "description": "Secret value (stored in Secret Manager)"
+            "description": "Secret value (stored in Secret Manager). Re-PUTting the same key adds a new GSM version and rotates the live value. Non-empty, no NULs, max 65536 UTF-8 bytes."
           }
         },
         "type": "object",
@@ -3474,11 +4584,41 @@
           "secret_id": {
             "type": "string",
             "title": "Secret Id",
-            "description": "GSM secret resource id / name"
+            "description": "GSM secret resource id (not a full projects/... path)"
           },
           "key": {
             "type": "string",
             "title": "Key"
+          },
+          "operation_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Operation Id",
+            "description": "Durable secret_operations row id"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "description": "running | applied | pending_reconcile | failed",
+            "default": "applied"
+          },
+          "stage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stage"
           }
         },
         "type": "object",
@@ -3670,7 +4810,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT or so_ API key",
-        "description": "Clerk session JWT for the web app, or a control-plane API key (`so_\u2026`) from POST /api/v1/api-keys for programmatic / docs try-it use."
+        "description": "Clerk session JWT for the web app (active organization required), or an organization-scoped SeaOtter access key (`so_\u2026`) from POST /api/v1/api-keys for programmatic / docs try-it / MCP use. The same `so_\u2026` value is both `Authorization: Bearer so_\u2026` and `SEAOTTER_API_KEY`."
       }
     }
   },

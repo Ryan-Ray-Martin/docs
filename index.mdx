@@ -20,9 +20,21 @@ description: Create your first SeaOtter agent and see it running in under five m
   </p>
 </div>
 
-SeaOtter is a managed control plane for Hermes Agent. This guide gets you from zero to a provisioning agent with a real API key.
+SeaOtter is a managed control plane for Hermes Agent. Pick a path:
 
-## 1. Sign up and create an API key
+## Recommended: connect from chat (MCP)
+
+Use your hosted Hermes agent from **Claude, Cursor, or Codex** without leaving the chat window.
+
+1. Open [seaotter.dev/connect](https://seaotter.dev/connect) (signed in).
+2. One-click **Add to Cursor** — or copy the Claude / Codex command.
+3. Paste the onboard prompt into chat.
+
+→ **[seaotter.dev/connect](https://seaotter.dev/connect)** · [MCP reference](/mcp)
+
+## Alternative: API / scripts (curl)
+
+### 1. Sign up and create an API key
 
 1. Create an account at [seaotter.dev](https://seaotter.dev).
 2. Open **Settings → API keys** (org admin required).
@@ -35,14 +47,14 @@ export SEAOTTER_API_KEY='so_…'
 export SEAOTTER_API='https://api.seaotter.dev'
 ```
 
-## 2. List agents
+### 2. List agents
 
 ```bash
 curl -sS "$SEAOTTER_API/api/v1/agents" \
   -H "Authorization: Bearer $SEAOTTER_API_KEY" | jq .
 ```
 
-## 3. Create an agent
+### 3. Create an agent
 
 ```bash
 curl -sS -X POST "$SEAOTTER_API/api/v1/agents" \
@@ -53,7 +65,7 @@ curl -sS -X POST "$SEAOTTER_API/api/v1/agents" \
 
 You get a `201` with `status: "provisioning"` almost immediately. Provision continues asynchronously.
 
-## 4. Poll provisioning stages
+### 4. Poll provisioning stages
 
 ```bash
 AGENT_ID='<id from create response>'
@@ -70,6 +82,7 @@ Stages run in fixed order until `wizard_reachable` is `ok` and `status` becomes 
 
 ## Next
 
+- [Connect from chat (MCP)](/mcp) — Claude, Cursor, Codex
 - [Authentication](/authentication) — API keys vs Clerk JWTs
 - [API reference](/api-reference) — interactive try-it against production
 - [Upstream Hermes docs](https://hermes-agent.nousresearch.com/docs) — tenant runtime, not the control plane

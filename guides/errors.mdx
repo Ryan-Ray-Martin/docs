@@ -1,7 +1,6 @@
 ---
-title: "Errors"
-sidebarTitle: "Errors"
-description: "Standard error shape, status codes, and retry guidance."
+title: Errors
+description: Standard error shape, status codes, and retry guidance.
 ---
 
 ## Error shape
@@ -39,7 +38,7 @@ Unhandled server errors return:
 ## Status codes you will see
 
 | Code | When |
-| --- | --- |
+|---|---|
 | `400` | Bad input the schema accepted but the handler rejected |
 | `401` | Missing/invalid Bearer (Clerk JWT or `so_` key) |
 | `402` | Plan capacity exceeded (e.g. too many agents) |
@@ -53,7 +52,7 @@ Unhandled server errors return:
 ## Retry guidance
 
 | Situation | Guidance |
-| --- | --- |
+|---|---|
 | `503` on create / provision path | Safe to retry. Cloud Tasks retries provision workers with backoff; clients may poll `GET /agents/{id}` instead of re-POSTing. |
 | `429` | Back off and retry with jitter; respect plan RPM. |
 | `401` / `403` / `404` / `402` | Do not blind-retry; fix credentials, role, or plan. |

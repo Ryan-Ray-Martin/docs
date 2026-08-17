@@ -1,0 +1,54 @@
+---
+title: Connect from chat (MCP)
+description: Use your SeaOtter-hosted Hermes agent from Claude, Cursor, or Codex via the Model Context Protocol.
+---
+
+Talk to your hosted Hermes agent **without leaving** Claude, Cursor, or Codex.
+
+## Fastest path (recommended)
+
+1. Sign in at [seaotter.dev/connect](https://seaotter.dev/connect) (Hobby users get a personal workspace automatically).
+2. Pick **Cursor**, **Claude**, or **Codex** — confirm **Create key**, then copy the command or config. The `so_…` value is both `SEAOTTER_API_KEY` and the Bearer token for `/api/v1`.
+3. Paste the onboard prompt into chat.
+
+→ **[Open connect](https://seaotter.dev/connect)**
+
+## What you paste (by client)
+
+All three clients run the same package: `@ryanseaotter/mcp-server` (official SeaOtter MCP), with `SEAOTTER_API_KEY=so_…` in the server env. That is a **SeaOtter access key**, not a Hermes runtime credential.
+
+| Client | What to paste | Guide |
+|---|---|---|
+| Cursor | One-click deeplink from connect, or JSON into `.cursor/mcp.json` | [Cursor](/mcp/cursor) |
+| Claude Code | One terminal command (`claude mcp add …`) | [Claude](/mcp/claude) |
+| Claude Desktop | JSON into `claude_desktop_config.json` | [Claude](/mcp/claude) |
+| Codex CLI | One terminal command (`codex mcp add …`) | [Codex](/mcp/codex) |
+| Codex / ChatGPT desktop | Same as CLI, or TOML in `~/.codex/config.toml` | [Codex](/mcp/codex) |
+
+## Environment variables
+
+| Variable | Required | Default |
+|---|---|---|
+| `SEAOTTER_API_KEY` | Yes | — |
+| `SEAOTTER_API` | No | `https://api.seaotter.dev` |
+| `HERMES_SESSION_KEY` | No | — (stable per-user memory scoping via `X-Hermes-Session-Key`) |
+
+## Troubleshooting
+
+| Symptom | Fix |
+|---|---|
+| Prefer zero typing | Use [seaotter.dev/connect](https://seaotter.dev/connect) |
+| MCP fails to start / “SEAOTTER_API_KEY is required” | Set the env on the **MCP server** config, not only in your shell |
+| `npx` not found | Install Node.js 20+ so `npx` is on your PATH |
+| Config saved but tools missing after replacing `so_…` | Update `SEAOTTER_API_KEY` in MCP config, then toggle the SeaOtter MCP server off/on (or **Developer: Reload Window**). Full Cursor quit is only needed if tools still do not refresh. |
+| Agent stuck in `provisioning` | Poll stages — see [Provisioning lifecycle](/guides/provisioning-lifecycle) |
+| `talk_to_hermes_agent` missing API key | Wait until `status=running` and `wizard_reachable` is `ok` |
+| `talk_to_hermes_agent` 401 after rotating Hermes credentials | MCP refreshes the runtime key and retries with backoff automatically. Prefer `rotate_agent_credentials` via MCP (control plane waits until Hermes accepts the new key). Do **not** paste `api_server_key` into MCP config or restart Cursor. |
+| CLI tools say exec is not available | Control plane needs `POST /api/v1/agents/{id}/exec` — control-plane + chat tools still work |
+| Destructive CLI refused | Tier-3 tools require `confirm: true` after the model restates the action |
+
+## Next
+
+- [Tools reference](/mcp/tools) — control plane, chat, CLI tiers
+- [Security](/mcp/security) — what the key can do, confirm gating, secrets
+- [Authentication](/authentication) — API keys vs Clerk JWTs

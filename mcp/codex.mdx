@@ -1,0 +1,44 @@
+---
+title: Codex
+description: Add the SeaOtter MCP server to Codex CLI and ChatGPT desktop / IDE.
+---
+
+Prefer [seaotter.dev/connect](https://seaotter.dev/connect) — it mints your key and copies the Codex install command for you.
+
+## Codex CLI (recommended)
+
+Copy, paste into your terminal, press Enter:
+
+```bash
+codex mcp add seaotter \
+  --env SEAOTTER_API_KEY=so_… \
+  -- npx -y @ryanseaotter/mcp-server
+```
+
+This writes `~/.codex/config.toml`, which is also used by ChatGPT desktop and the IDE extension.
+
+You’re done when SeaOtter shows up as an MCP server. Then in chat:
+
+> Use the SeaOtter MCP to onboard a Hermes agent named my-hermes, then talk to it.
+
+## Manual `config.toml`
+
+If you prefer editing the file yourself:
+
+```toml
+[mcp_servers.seaotter]
+command = "npx"
+args = ["-y", "@ryanseaotter/mcp-server"]
+
+[mcp_servers.seaotter.env]
+SEAOTTER_API_KEY = "so_…"
+```
+
+Restart Codex / ChatGPT desktop after saving.
+
+## Notes
+
+- Package on npm: `@ryanseaotter/mcp-server` (official SeaOtter MCP).
+- Needs Node.js 20+ (`npx` on PATH).
+- Same tools as Claude and Cursor — [Connect from chat](/mcp).
+- Destructive Hermes CLI tools require `confirm: true` — see [Security](/mcp/security).

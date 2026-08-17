@@ -1,0 +1,77 @@
+---
+title: MCP security
+sidebarTitle: Security
+description: What a SeaOtter access key can do, confirm gating, and how secrets reach Hermes.
+---
+
+## API key scope
+
+A SeaOtter access key (`so_…`) authenticates as **workspace admin** for that
+organization. The same secret is:
+
+- `SEAOTTER_API_KEY` in MCP client config
+- `Authorization: Bearer so_…` against `https://api.seaotter.dev/api/v1`
+
+Through MCP it can create, stop, delete agents, reveal credentials, and (when
+deployed) run allowlisted `hermes` commands in the agent pod.
+
+Treat the key like a password. Do not commit it. Prefer per-client keys and
+revoke from Settings when done.
+
+Hermes **runtime credentials** (`api_server_key` on each agent) are a separate
+Bearer for that agent's `/v1` API. The MCP server fetches them after
+authenticating with `so_…` and caches them **in process memory only**. After
+dashboard or MCP `rotate_agent_credentials`, the cache is updated automatically;
+`talk_to_hermes_agent` also re-reveals once on Hermes 401/403. Do **not** paste
+Hermes runtime credentials into MCP config, and you should not need to restart
+Cursor to pick up a rotated Hermes key. SeaOtter re-pins Hermes platform
+runtime credentials into the agent PVC `.env` from the mounted Secret on every
+boot so Hermes dotenv cannot drift from GSM; SeaOtter-managed integration keys
+are not persisted there. The control plane verifies rotate against
+authenticated `/v1/models` before succeeding.
+
+## Connection-key lifecycle
+
+Visiting **Connect** does not create a key. A workspace admin must choose a
+client and explicitly select **Create key**. SeaOtter retains one active MCP key
+per client purpose (`cursor`, `claude`, or `codex`); replacing it revokes the
+previous key immediately.
+
+Hobby users without a team receive a one-seat personal workspace automatically
+and are admins of that workspace.
+
+The full secret is shown once and cleared from the dashboard after 45 seconds.
+After you create a Cursor key, Connect opens the Cursor install deeplink (and
+copies JSON as a fallback). Treat that URL like the secret — do not share or
+bookmark it. Settings shows the key prefix, purpose, creation time, and
+last-used time so admins can identify and revoke stale credentials. Legacy keys
+named `MCP connect` should be replaced with per-client keys, then revoked.
+
+## Confirm gating (tier 3)
+
+Destructive Hermes CLI tools and some control-plane actions require `confirm: true`. The calling model should restate the action in plain language and wait for your OK before setting that flag.
+
+Examples: `hermes_uninstall`, `hermes_checkpoints_clear`, `delete_agent`, `restore_agent`.
+
+## No `--yolo`
+
+Hermes’ `--yolo` flag skips local approval prompts. It is **excluded** from the MCP and control-plane exec allowlists so a remote chat message cannot disable the agent’s own safety net.
+
+## Secrets
+
+Hermes [recommends loading provider keys from an external secret manager at startup](https://hermes-agent.nousresearch.com/docs/user-guide/secrets/) instead of storing them in `.env`. SeaOtter-managed integration keys follow that path.
+
+| Path                                                | Behavior                                                                                                 |
+| --------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `upsert_secret` / `delete_secret` / onboard own-key | Stored/removed in Google Secret Manager via SeaOtter; not written to the MCP host. Hermes loads integration keys at startup as environment variables. Running agents restart so the new mapping is applied. Config `PATCH` cannot store secret-like keys (`use_secrets_path`). |
+| `reveal_agent_credentials`                          | Returned to the chat client; overwrites the in-memory Hermes runtime cache                               |
+| `rotate_agent_credentials`                          | Returns a **redacted** summary (no plaintext secrets). Updates the Hermes runtime cache when the API key rotates. Control plane waits for Secret Sync value convergence, replacement-pod Ready (auth-aware), and a successful authenticated `/v1/models` probe before succeeding. |
+| Pasted keys in chat                                 | May remain in that chat’s history — prefer the dashboard Secrets tab (write-only dialogs) or `upsert_secret`. Never paste values into Config env. |
+
+## Audit
+
+Every `POST /agents/{id}/exec` call is audit-logged (argv, org, actor, exit code, timestamp). Interactive OAuth / TUI flows are not scripted — use the dashboard link (tier 4).
+
+## Tier 4 interactive flows
+
+`hermes model`, OAuth `hermes auth`, full `hermes setup`, desktop/GUI, WhatsApp pairing, and egress setup cannot be represented as a single non-interactive call. MCP returns `dashboard_handoff_url` instead.

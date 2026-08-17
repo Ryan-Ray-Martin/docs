@@ -68,7 +68,19 @@
             "group": "Get started",
             "pages": [
               "index",
-              "authentication"
+              "authentication",
+              "mcp/index"
+            ]
+          },
+          {
+            "group": "Connect from chat",
+            "pages": [
+              "mcp/index",
+              "mcp/claude",
+              "mcp/cursor",
+              "mcp/codex",
+              "mcp/tools",
+              "mcp/security"
             ]
           },
           {
@@ -76,6 +88,7 @@
             "pages": [
               "guides/provisioning-lifecycle",
               "guides/secrets",
+              "guides/regions",
               "guides/errors",
               "guides/versioning",
               "guides/changelog"
