@@ -1,7 +1,6 @@
 ---
-title: "Authentication"
-sidebarTitle: "Authentication"
-description: "When to use control-plane API keys vs Clerk session JWTs."
+title: Authentication
+description: When to use control-plane API keys vs Clerk session JWTs.
 ---
 
 Every authenticated control-plane request uses:
@@ -16,10 +15,10 @@ SeaOtter accepts two bearer types on the same header.
 
 **Use for:** scripts, CI, SDKs, MCP (`SEAOTTER_API_KEY`), and the interactive playground on this docs site.
 
-|  |  |
-| --- | --- |
+| | |
+|---|---|
 | Create | `POST /api/v1/api-keys` (workspace admin) while signed into the web app, Connect, or Settings |
-| Shape | `so_` \+ random secret; returned once in `secret` |
+| Shape | `so_` + random secret; returned once in `secret` |
 | Scope | Bound to the organization / personal workspace that created the key |
 | Rights | Treated as org admin for mutate routes on that org |
 | Transport | Same value as `Authorization: Bearer so_…` and MCP `SEAOTTER_API_KEY` |
@@ -46,8 +45,8 @@ See [Connect from chat](/mcp) for Claude, Cursor, and Codex config snippets. Nev
 
 **Use for:** the SeaOtter web app at seaotter.dev only.
 
-|  |  |
-| --- | --- |
+| | |
+|---|---|
 | Issuer | `https://clerk.seaotter.dev` (RS256 via JWKS) |
 | Org claims | Nested `o.id` / `o.rol` when an organization is active |
 | Mutate routes | Require `org:admin` (members are read-only) |
@@ -58,7 +57,7 @@ Clerk cookies and short-lived session tokens are not for scripts or the docs pla
 ## What not to mix up
 
 | Credential | Surface |
-| --- | --- |
+|---|---|
 | SeaOtter access key (`so_…`) | `/api/v1/*` Bearer **and** MCP `SEAOTTER_API_KEY` |
 | Clerk JWT | SeaOtter web → API |
 | Hermes runtime credential (`api_server_key`) | Per-agent Hermes `/v1` on `*.agents.seaotter.dev` — revealed/fetched after `so_…` auth |

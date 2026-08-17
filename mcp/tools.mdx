@@ -1,6 +1,6 @@
 ---
-title: "MCP tools"
-description: "Control-plane, runtime chat, onboarding, and tiered Hermes CLI tools exposed by @ryanseaotter/mcp-server."
+title: MCP tools
+description: Control-plane, runtime chat, onboarding, and tiered Hermes CLI tools exposed by @ryanseaotter/mcp-server.
 ---
 
 ## Control plane (SeaOtter API)
@@ -8,23 +8,23 @@ description: "Control-plane, runtime chat, onboarding, and tiered Hermes CLI too
 Mapped from the public OpenAPI schema (`/api/v1`):
 
 | Tool | Purpose |
-| --- | --- |
+|---|---|
 | `list_agents` / `get_agent` | Inventory and detail (includes `provisioning_stages`) |
 | `create_agent` | Create; returns immediately while provisioning |
-| `create_agent_and_wait` | Create \+ poll to `wizard_reachable` with progress |
+| `create_agent_and_wait` | Create + poll to `wizard_reachable` with progress |
 | `start_agent` / `stop_agent` / `restart_agent` | Lifecycle |
 | `delete_agent` | Destroy (requires `confirm: true`) |
 | `reveal_agent_credentials` / `rotate_agent_credentials` | Reveal returns secrets; rotate returns a **redacted** summary and refreshes the in-memory Hermes runtime key |
 | `list_agent_backups` / `restore_agent` | VolumeSnapshot restore points |
 | `upsert_secret` | GSM-backed secret create/replace (Hermes loads the key at startup; running agents restart; never written to the MCP host disk) |
-| `delete_secret` | Destroy GSM secret \+ drop env ref (restarts pod) |
+| `delete_secret` | Destroy GSM secret + drop env ref (restarts pod) |
 | `list_plans` / `get_subscription` | Billing |
 
 ## Runtime chat (Hermes API server)
 
 | Tool | Purpose |
-| --- | --- |
-| `talk_to_hermes_agent` | Message the agent (`/v1/runs` \+ SSE when available, else `/v1/responses`) |
+|---|---|
+| `talk_to_hermes_agent` | Message the agent (`/v1/runs` + SSE when available, else `/v1/responses`) |
 | `resolve_hermes_approval` | Resolve a pending run approval when `run_approval` is advertised |
 
 SeaOtter-hosted agents already have `API_SERVER_ENABLED=true`. Credentials are revealed and cached in memory for the MCP process; cache is refreshed on rotate/reveal and once on Hermes 401/403.
@@ -32,7 +32,7 @@ SeaOtter-hosted agents already have `API_SERVER_ENABLED=true`. Credentials are r
 ## Onboarding
 
 | Tool | Purpose |
-| --- | --- |
+|---|---|
 | `onboard_hermes_agent` | Create → provision → provider choice → ready handoff |
 
 ## Hermes CLI bridge (tiered)
@@ -40,7 +40,7 @@ SeaOtter-hosted agents already have `API_SERVER_ENABLED=true`. Credentials are r
 Executed via `POST /api/v1/agents/{id}/exec` (argv-only `hermes`, never a shell).
 
 | Tier | Policy | Examples |
-| --- | --- | --- |
+|---|---|---|
 | 1 | Read-only | `hermes_status`, `hermes_logs`, `hermes_doctor`, `hermes_config_show`, `hermes_skills_list`, … |
 | 2 | Additive / reversible | `hermes_config_set`, `hermes_skills_install`, `hermes_cron_*`, `hermes_oneshot` (`-z`, prefers `--source tool`, retries without it on older Hermes) |
 | 3 | Destructive — `confirm: true` required | `hermes_uninstall`, `hermes_checkpoints_clear`, `hermes_auth_logout`, … |
