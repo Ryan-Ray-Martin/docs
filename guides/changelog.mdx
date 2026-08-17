@@ -4,6 +4,13 @@ sidebarTitle: "Changelog"
 description: "Notable changes to the public SeaOtter control-plane API."
 ---
 
+## 2026-08-17 — Integration secrets load at Hermes startup
+
+- Agent **Secrets** tab and MCP `upsert_secret` remain write-only. Values are never shown again after save.
+- Integration keys are stored in Google Secret Manager. Hermes loads them at startup as environment variables so tools can use them.
+- Running agents still restart after save so Hermes picks up a new or replaced key.
+- Operator guide: [Secrets](/guides/secrets).
+
 ## 2026-08-16 — Write-only Secrets tab
 
 - Agent **Secrets** tab is the write-only path for integration API keys (add / replace / delete). Values are never shown again after save.
