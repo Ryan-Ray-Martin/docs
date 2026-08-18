@@ -114,38 +114,6 @@
         ],
         "openapi": "openapi.json"
       }
-    ],
-    "groups": [
-      {
-        "group": "Get started",
-        "pages": [
-          "guides/what-is-seaotter",
-          "index",
-          "guides/self-host-vs-managed",
-          "authentication"
-        ]
-      },
-      {
-        "group": "Concepts",
-        "pages": [
-          "guides/provisioning-lifecycle",
-          "guides/secrets",
-          "guides/regions",
-          "guides/errors",
-          "guides/versioning",
-          "guides/changelog"
-        ]
-      },
-      {
-        "group": "API reference",
-        "pages": [
-          "api-reference/overview",
-          "api-reference/list-agents",
-          "api-reference/create-agent",
-          "api-reference/get-agent",
-          "api-reference/create-api-key"
-        ]
-      }
     ]
   },
   "contextual": {
@@ -155,7 +123,7 @@
     ]
   },
   "metadata": {
-    "forceDeploy": "2026-08-18"
+    "forceDeploy": "2026-08-18-preview"
   },
   "seo": {
     "indexing": "all",
