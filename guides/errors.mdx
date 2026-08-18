@@ -3,7 +3,7 @@ title: Errors
 description: Standard error shape, status codes, and retry guidance.
 ---
 
-SeaOtter control-plane errors are JSON. Almost all failures use a `detail` string; validation errors use FastAPI’s list form. Retry **503** provision failures with backoff; do not retry `4xx` without fixing the request.
+SEAOTTER control-plane errors are JSON. Almost all failures use a `detail` string; validation errors use FastAPI’s list form. Retry **503** provision failures with backoff; do not retry `4xx` without fixing the request.
 
 ## Error shape
 

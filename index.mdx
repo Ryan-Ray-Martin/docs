@@ -1,19 +1,19 @@
 ---
 title: Quickstart
-description: Create your first SeaOtter-hosted Hermes agent — typically running in under five minutes — or connect from Cursor, Claude, or Codex.
+description: Create your first SEAOTTER-hosted Hermes agent — typically running in under five minutes — or connect from Cursor, Claude, or Codex.
 ---
 
-SeaOtter is the **managed control plane for Hermes Agent**. Create an always-on agent on Google Cloud, poll until it is running (typical wall time: a few minutes), then operate it without SSH. Full definition: [What is SeaOtter?](/guides/what-is-seaotter).
+SEAOTTER is the **managed control plane for Hermes Agent**. Create an always-on agent on Google Cloud, poll until it is running (typical wall time: a few minutes), then operate it without SSH. Full definition: [What is SEAOTTER?](/guides/what-is-seaotter).
 
 <div className="flex flex-col items-center gap-4 text-center not-prose mb-10 mt-8">
   <img
     src="/logo/light.png"
-    alt="SeaOtter"
+    alt="SEAOTTER"
     className="h-20 w-auto dark:hidden"
   />
   <img
     src="/logo/dark.png"
-    alt="SeaOtter"
+    alt="SEAOTTER"
     className="hidden h-20 w-auto dark:block"
   />
   <p className="max-w-xl text-lg text-gray-600 dark:text-gray-300">
@@ -83,7 +83,7 @@ Stages run in fixed order until `wizard_reachable` is `ok` and `status` becomes 
 
 ## Next
 
-- [What is SeaOtter?](/guides/what-is-seaotter) — category definition
+- [What is SEAOTTER?](/guides/what-is-seaotter) — category definition
 - [Self-host vs managed](/guides/self-host-vs-managed) — when to keep the VPS
 - [Connect from chat (MCP)](/mcp) — Claude, Cursor, Codex
 - [Authentication](/authentication) — API keys vs Clerk JWTs
@@ -95,7 +95,7 @@ Stages run in fixed order until `wizard_reachable` is `ok` and `status` becomes 
     Typical wall time is a few minutes (usually under five) while namespace, Helm, pod, DNS, and dashboard gates complete. Poll `config.provisioning_stages` until `wizard_reachable` is `ok`. Details: [Provisioning lifecycle](/guides/provisioning-lifecycle).
   </Accordion>
   <Accordion title="Do I SSH into the box?">
-    No. Pause, restart, restore, secrets, and credentials go through the dashboard or API. See [What is SeaOtter?](/guides/what-is-seaotter).
+    No. Pause, restart, restore, secrets, and credentials go through the dashboard or API. See [What is SEAOTTER?](/guides/what-is-seaotter).
   </Accordion>
   <Accordion title="Is this seaotter.ai?">
     No. These docs are **seaotter.dev** (managed Hermes hosting). seaotter.ai is a different OtterScore product.

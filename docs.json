@@ -1,12 +1,15 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
-  "name": "SeaOtter",
-  "description": "Managed control plane for Hermes Agent — always-on hosted agents on Google Cloud, without a VPS or SSH. Docs for seaotter.dev (not seaotter.ai).",
+  "name": "SEAOTTER",
+  "description": "Managed control plane for Hermes Agent \u2014 always-on hosted agents on Google Cloud, without a VPS or SSH. Docs for seaotter.dev (not seaotter.ai).",
   "colors": {
     "primary": "#0089FF",
     "light": "#00C8C8",
     "dark": "#0007CD"
+  },
+  "metadata": {
+    "forceDeploy": "2026-08-18-seaotter-caps"
   },
   "favicon": "/favicon.png",
   "logo": {
@@ -100,6 +103,7 @@
       },
       {
         "tab": "API reference",
+        "openapi": "openapi.json",
         "groups": [
           {
             "group": "API reference",
@@ -111,8 +115,7 @@
               "api-reference/create-api-key"
             ]
           }
-        ],
-        "openapi": "openapi.json"
+        ]
       }
     ]
   },
@@ -122,14 +125,11 @@
       "download-spec"
     ]
   },
-  "metadata": {
-    "forceDeploy": "2026-08-18-preview"
-  },
   "seo": {
     "indexing": "all",
     "organization": {
       "id": "https://seaotter.dev/#organization",
-      "name": "SeaOtter",
+      "name": "SEAOTTER",
       "url": "https://seaotter.dev",
       "logo": "https://seaotter.dev/brand/og-image.png",
       "sameAs": [

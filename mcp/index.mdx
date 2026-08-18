@@ -1,9 +1,9 @@
 ---
 title: Connect from chat (MCP)
-description: Use your SeaOtter-hosted Hermes agent from Claude, Cursor, or Codex via the Model Context Protocol.
+description: Use your SEAOTTER-hosted Hermes agent from Claude, Cursor, or Codex via the Model Context Protocol.
 ---
 
-Talk to a **SeaOtter-hosted** Hermes agent from Claude, Cursor, or Codex via MCP — without SSH and without running `hermes mcp serve` on your laptop. The hosted path is [seaotter.dev/connect](https://seaotter.dev/connect).
+Talk to a **SEAOTTER-hosted** Hermes agent from Claude, Cursor, or Codex via MCP — without SSH and without running `hermes mcp serve` on your laptop. The hosted path is [seaotter.dev/connect](https://seaotter.dev/connect).
 
 ## Fastest path (recommended)
 
@@ -15,7 +15,7 @@ Talk to a **SeaOtter-hosted** Hermes agent from Claude, Cursor, or Codex via MCP
 
 ## What you paste (by client)
 
-All three clients run the same package: `@ryanseaotter/mcp-server` (official SeaOtter MCP), with `SEAOTTER_API_KEY=so_…` in the server env. That is a **SeaOtter access key**, not a Hermes runtime credential.
+All three clients run the same package: `@ryanseaotter/mcp-server` (official SEAOTTER MCP), with `SEAOTTER_API_KEY=so_…` in the server env. That is a **SEAOTTER access key**, not a Hermes runtime credential.
 
 | Client | What to paste | Guide |
 |---|---|---|
@@ -40,7 +40,7 @@ All three clients run the same package: `@ryanseaotter/mcp-server` (official Sea
 | Prefer zero typing | Use [seaotter.dev/connect](https://seaotter.dev/connect) |
 | MCP fails to start / “SEAOTTER_API_KEY is required” | Set the env on the **MCP server** config, not only in your shell |
 | `npx` not found | Install Node.js 20+ so `npx` is on your PATH |
-| Config saved but tools missing after replacing `so_…` | Update `SEAOTTER_API_KEY` in MCP config, then toggle the SeaOtter MCP server off/on (or **Developer: Reload Window**). Full Cursor quit is only needed if tools still do not refresh. |
+| Config saved but tools missing after replacing `so_…` | Update `SEAOTTER_API_KEY` in MCP config, then toggle the SEAOTTER MCP server off/on (or **Developer: Reload Window**). Full Cursor quit is only needed if tools still do not refresh. |
 | Agent stuck in `provisioning` | Poll stages — see [Provisioning lifecycle](/guides/provisioning-lifecycle) |
 | `talk_to_hermes_agent` missing API key | Wait until `status=running` and `wizard_reachable` is `ok` |
 | `talk_to_hermes_agent` 401 after rotating Hermes credentials | MCP refreshes the runtime key and retries with backoff automatically. Prefer `rotate_agent_credentials` via MCP (control plane waits until Hermes accepts the new key). Do **not** paste `api_server_key` into MCP config or restart Cursor. |
@@ -56,7 +56,7 @@ All three clients run the same package: `@ryanseaotter/mcp-server` (official Sea
 
 <AccordionGroup>
   <Accordion title="Is this the same as local hermes mcp serve?">
-    No. Local Hermes MCP exposes a Hermes process on your machine. SeaOtter MCP (`@ryanseaotter/mcp-server`) talks to the **control plane** with a `so_…` key so Cursor/Claude/Codex can operate a **hosted** agent.
+    No. Local Hermes MCP exposes a Hermes process on your machine. SEAOTTER MCP (`@ryanseaotter/mcp-server`) talks to the **control plane** with a `so_…` key so Cursor/Claude/Codex can operate a **hosted** agent.
   </Accordion>
   <Accordion title="Which clients are supported?">
     Cursor, Claude Code, Claude Desktop, Codex CLI, and Codex / ChatGPT desktop. These are supported integrations—not customer logos.

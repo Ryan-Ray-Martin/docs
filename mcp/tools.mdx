@@ -3,7 +3,7 @@ title: MCP tools
 description: Control-plane, runtime chat, onboarding, and tiered Hermes CLI tools exposed by @ryanseaotter/mcp-server.
 ---
 
-## Control plane (SeaOtter API)
+## Control plane (SEAOTTER API)
 
 Mapped from the public OpenAPI schema (`/api/v1`):
 
@@ -27,7 +27,7 @@ Mapped from the public OpenAPI schema (`/api/v1`):
 | `talk_to_hermes_agent` | Message the agent (`/v1/runs` + SSE when available, else `/v1/responses`) |
 | `resolve_hermes_approval` | Resolve a pending run approval when `run_approval` is advertised |
 
-SeaOtter-hosted agents already have `API_SERVER_ENABLED=true`. Credentials are revealed and cached in memory for the MCP process; cache is refreshed on rotate/reveal and once on Hermes 401/403.
+SEAOTTER-hosted agents already have `API_SERVER_ENABLED=true`. Credentials are revealed and cached in memory for the MCP process; cache is refreshed on rotate/reveal and once on Hermes 401/403.
 
 ## Onboarding
 
