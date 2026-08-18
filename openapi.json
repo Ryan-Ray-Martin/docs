@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "SeaOtter API",
-    "description": "SeaOtter control plane API \u2014 managed Hermes Agent hosting. Authenticate with a Clerk session JWT (web) or an org-scoped API key (`Authorization: Bearer so_\u2026` from POST /api/v1/api-keys). Public developer docs: https://docs.seaotter.dev",
+    "title": "SEAOTTER API",
+    "description": "SEAOTTER control plane API \u2014 managed Hermes Agent hosting. Authenticate with a Clerk session JWT (web) or an org-scoped API key (`Authorization: Bearer so_\u2026` from POST /api/v1/api-keys). Public developer docs: https://docs.seaotter.dev",
     "version": "1.0.0"
   },
   "servers": [
@@ -2296,7 +2296,7 @@
           "users"
         ],
         "summary": "Create API key",
-        "description": "Creates an organization-scoped SeaOtter access key (`so_\u2026`). The full secret is returned once in `secret`. Use it as `Authorization: Bearer so_\u2026` for `/api/v1` and as `SEAOTTER_API_KEY` for the MCP server. MCP purposes keep one active key per client (`mcp:cursor`, `mcp:claude`, `mcp:codex`).",
+        "description": "Creates an organization-scoped SEAOTTER access key (`so_\u2026`). The full secret is returned once in `secret`. Use it as `Authorization: Bearer so_\u2026` for `/api/v1` and as `SEAOTTER_API_KEY` for the MCP server. MCP purposes keep one active key per client (`mcp:cursor`, `mcp:claude`, `mcp:codex`).",
         "operationId": "create_key_api_v1_api_keys_post",
         "requestBody": {
           "content": {
@@ -4059,7 +4059,7 @@
           "detail"
         ],
         "title": "ErrorBody",
-        "description": "Standard FastAPI / SeaOtter error payload."
+        "description": "Standard FastAPI / SEAOTTER error payload."
       },
       "HTTPValidationError": {
         "properties": {
@@ -4810,7 +4810,7 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT or so_ API key",
-        "description": "Clerk session JWT for the web app (active organization required), or an organization-scoped SeaOtter access key (`so_\u2026`) from POST /api/v1/api-keys for programmatic / docs try-it / MCP use. The same `so_\u2026` value is both `Authorization: Bearer so_\u2026` and `SEAOTTER_API_KEY`."
+        "description": "Clerk session JWT for the web app (active organization required), or an organization-scoped SEAOTTER access key (`so_\u2026`) from POST /api/v1/api-keys for programmatic / docs try-it / MCP use. The same `so_\u2026` value is both `Authorization: Bearer so_\u2026` and `SEAOTTER_API_KEY`."
       }
     }
   },

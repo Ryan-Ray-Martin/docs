@@ -3,7 +3,7 @@ title: Authentication
 description: When to use control-plane API keys vs Clerk session JWTs.
 ---
 
-Authenticate to the **SeaOtter control plane** with `Authorization: Bearer <token>`. Scripts, MCP, and CI use a SeaOtter access key (`so_…`). The signed-in dashboard uses a Clerk session JWT. Hermes **runtime** credentials on each agent are a separate secret — do not put `api_server_key` in MCP config.
+Authenticate to the **SEAOTTER control plane** with `Authorization: Bearer <token>`. Scripts, MCP, and CI use a SEAOTTER access key (`so_…`). The signed-in dashboard uses a Clerk session JWT. Hermes **runtime** credentials on each agent are a separate secret — do not put `api_server_key` in MCP config.
 
 Every authenticated control-plane request uses:
 
@@ -11,9 +11,9 @@ Every authenticated control-plane request uses:
 Authorization: Bearer <token>
 ```
 
-SeaOtter accepts two bearer types on the same header.
+SEAOTTER accepts two bearer types on the same header.
 
-## SeaOtter access keys (`so_…`)
+## SEAOTTER access keys (`so_…`)
 
 **Use for:** scripts, CI, SDKs, MCP (`SEAOTTER_API_KEY`), and the interactive playground on this docs site.
 
@@ -45,7 +45,7 @@ See [Connect from chat](/mcp) for Claude, Cursor, and Codex config snippets. Nev
 
 ## Clerk session JWT
 
-**Use for:** the SeaOtter web app at seaotter.dev only.
+**Use for:** the SEAOTTER web app at seaotter.dev only.
 
 | | |
 |---|---|
@@ -60,8 +60,8 @@ Clerk cookies and short-lived session tokens are not for scripts or the docs pla
 
 | Credential | Surface |
 |---|---|
-| SeaOtter access key (`so_…`) | `/api/v1/*` Bearer **and** MCP `SEAOTTER_API_KEY` |
-| Clerk JWT | SeaOtter web → API |
+| SEAOTTER access key (`so_…`) | `/api/v1/*` Bearer **and** MCP `SEAOTTER_API_KEY` |
+| Clerk JWT | SEAOTTER web → API |
 | Hermes runtime credential (`api_server_key`) | Per-agent Hermes `/v1` on `*.agents.seaotter.dev` — revealed/fetched after `so_…` auth |
 
 ## Errors

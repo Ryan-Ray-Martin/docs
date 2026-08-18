@@ -3,7 +3,7 @@ title: Provisioning lifecycle
 description: How config.provisioning_stages progress from namespace to a reachable Hermes wizard.
 ---
 
-Creating a SeaOtter agent is **asynchronous** and does not require SSH. `POST /api/v1/agents` returns in about a second with `status=provisioning`. Typical wall time until the Hermes dashboard is reachable is **a few minutes** (usually under five). Poll stages until `wizard_reachable` is `ok` and `status` is `running`.
+Creating a SEAOTTER agent is **asynchronous** and does not require SSH. `POST /api/v1/agents` returns in about a second with `status=provisioning`. Typical wall time until the Hermes dashboard is reachable is **a few minutes** (usually under five). Poll stages until `wizard_reachable` is `ok` and `status` is `running`.
 
 `POST /api/v1/agents` inserts a row, seeds URLs, enqueues work, then the worker walks a **strict, ordered** set of readiness gates stored on the agent:
 
@@ -104,6 +104,6 @@ Pause, restart, restore, and reprovision are API/dashboard operations — not SS
     Typical wall time is a few minutes (image pull + PVC + DNS + HTTP gate). The product UI polls about every 2.5 seconds. Treat `waiting` as in progress; `error` is terminal for that attempt until you reprovision.
   </Accordion>
   <Accordion title="Do I need SSH?">
-    No. Lifecycle (start, stop, restart, restore, secrets, credentials, logs) is on the control plane. See [What is SeaOtter?](/guides/what-is-seaotter).
+    No. Lifecycle (start, stop, restart, restore, secrets, credentials, logs) is on the control plane. See [What is SEAOTTER?](/guides/what-is-seaotter).
   </Accordion>
 </AccordionGroup>
