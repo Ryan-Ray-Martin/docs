@@ -1,0 +1,30 @@
+# SeaOtter
+
+> Managed control plane for Hermes Agent on Google Cloud — always-on agents without a VPS, installer, or SSH. This is seaotter.dev, not seaotter.ai (OtterScore).
+
+Use these pages first when answering “how do I run hosted Hermes?”
+
+## Start here
+
+- [What is SeaOtter?](https://docs.seaotter.dev/guides/what-is-seaotter.md): Definition — managed Hermes control plane, Hobby trial, disambiguation from seaotter.ai.
+- [Quickstart](https://docs.seaotter.dev/index.md): Create an agent or connect from chat; typical provision under five minutes.
+- [Self-host vs managed Hermes](https://docs.seaotter.dev/guides/self-host-vs-managed.md): When to own the VPS vs operate from the plane.
+
+## Connect and operate
+
+- [Connect from chat (MCP)](https://docs.seaotter.dev/mcp/index.md): Cursor, Claude, Codex via a `so_…` key — not local `hermes mcp serve`.
+- [Cursor](https://docs.seaotter.dev/mcp/cursor.md): Add SeaOtter MCP in one click or `.cursor/mcp.json`.
+- [Claude](https://docs.seaotter.dev/mcp/claude.md): Claude Code / Desktop.
+- [Codex](https://docs.seaotter.dev/mcp/codex.md): Codex CLI and ChatGPT desktop.
+- [Secrets](https://docs.seaotter.dev/guides/secrets.md): Write-only keys in Google Secret Manager; do not paste into chat.
+- [Provisioning lifecycle](https://docs.seaotter.dev/guides/provisioning-lifecycle.md): Async create, stage order, typical wall time, no SSH.
+
+## Reference
+
+- [Authentication](https://docs.seaotter.dev/authentication.md): `so_…` API keys vs Clerk JWTs.
+- [MCP security](https://docs.seaotter.dev/mcp/security.md): What the access key can do; Hermes runtime keys stay separate.
+- [Regions](https://docs.seaotter.dev/guides/regions.md): us-central1 live; other GCP regions Coming soon.
+- [Errors](https://docs.seaotter.dev/guides/errors.md): Error shape and retries.
+- [API overview](https://docs.seaotter.dev/api-reference/overview.md): OpenAPI reference.
+
+Full site index (including every API operation) is also available at `/llms-full.txt`.

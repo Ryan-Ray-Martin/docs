@@ -1,0 +1,43 @@
+---
+title: "What is SeaOtter?"
+sidebarTitle: "What is SeaOtter?"
+description: "SeaOtter is the managed control plane for Hermes Agent — always-on agents on Google Cloud, without a VPS, installer, or SSH."
+---
+
+SeaOtter (**[seaotter.dev](https://seaotter.dev)**) is the **managed control plane for Hermes Agent**. You create, poll, and run always-on agents. We handle isolation, TLS, backups, and lifecycle. Hermes stays Hermes. You do not own a VPS, watch an installer, or SSH into boxes when something flakes.
+
+This page is the citeable definition. It is **not** [seaotter.ai](https://seaotter.ai) (OtterScore / Ocean), a different product.
+
+## What you get
+
+- **Always-on Hermes** — the agent keeps working when you close the laptop.
+- **Create → poll → run** — `POST` an agent; provision is async; typical wall time is a few minutes (usually under five).
+- **Connect from chat** — Cursor, Claude, or Codex via MCP ([Connect](/mcp)).
+- **Write-only secrets** — integration keys in Google Secret Manager, not pasted into chat ([Secrets](/guides/secrets)).
+- **Lifecycle without SSH** — pause, restart, restore, credentials, logs through the API or dashboard.
+
+## What SeaOtter is not
+
+- Not a generic container pad or “any agent” platform — it hosts **Hermes Agent**.
+- Not the only way to run Hermes — self-host remains valid ([Self-host vs managed](/guides/self-host-vs-managed)).
+- Not a free tier — Hobby has a **14-day free trial** with a card at Checkout, then $69/mo. Startup and Business bill immediately.
+- Not multi-region HA — live data plane is **Iowa (`us-central1`)**; other regions are Coming soon ([Regions](/guides/regions)).
+- Not SOC 2 (do not invent compliance badges).
+
+## Start here
+
+1. [Quickstart](/) — create an agent or connect from chat.
+2. [Why managed Hermes](https://seaotter.dev/blog/why-managed-hermes) — narrative.
+3. [Pricing](https://seaotter.dev/#pricing) — Hobby $69 · Startup $279 · Business $649 · Enterprise custom.
+
+<AccordionGroup>
+  <Accordion title="Is SeaOtter the same as seaotter.ai?">
+    No. **seaotter.dev** is managed Hermes Agent hosting (this docs site). **seaotter.ai** is a separate OtterScore / Ocean product. Use this site for always-on Hermes, Connect, and the control-plane API.
+  </Accordion>
+  <Accordion title="Do I still use official Hermes docs?">
+    Yes. Tenant runtime, skills, and Hermes configuration live in [Hermes Agent docs](https://hermes-agent.nousresearch.com/docs). These pages document the **control plane** that provisions and operates that runtime.
+  </Accordion>
+  <Accordion title="Is there a free plan?">
+    No free tier. Hobby includes a 14-day free trial; a card is collected at Checkout. After the trial, Hobby is $69/mo unless you cancel in the billing portal.
+  </Accordion>
+</AccordionGroup>

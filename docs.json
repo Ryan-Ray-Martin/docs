@@ -2,16 +2,16 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "SeaOtter",
-  "description": "SeaOtter control plane API for managed Hermes Agent hosting",
+  "description": "Managed control plane for Hermes Agent — always-on hosted agents on Google Cloud, without a VPS or SSH. Docs for seaotter.dev (not seaotter.ai).",
   "colors": {
     "primary": "#0089FF",
     "light": "#00C8C8",
     "dark": "#0007CD"
   },
-  "favicon": "https://seaotter.dev/brand/sea-otter-logo-chip.png",
+  "favicon": "/favicon.png",
   "logo": {
-    "light": "https://seaotter.dev/brand/sea-otter-logo-chip.png",
-    "dark": "https://seaotter.dev/brand/sea-otter-logo-mark.png",
+    "light": "/logo/light.png",
+    "dark": "/logo/dark.png",
     "href": "https://seaotter.dev"
   },
   "fonts": {
@@ -67,7 +67,9 @@
           {
             "group": "Get started",
             "pages": [
+              "guides/what-is-seaotter",
               "index",
+              "guides/self-host-vs-managed",
               "authentication",
               "mcp/index"
             ]
@@ -117,7 +119,9 @@
       {
         "group": "Get started",
         "pages": [
+          "guides/what-is-seaotter",
           "index",
+          "guides/self-host-vs-managed",
           "authentication"
         ]
       },
@@ -125,6 +129,7 @@
         "group": "Concepts",
         "pages": [
           "guides/provisioning-lifecycle",
+          "guides/secrets",
           "guides/regions",
           "guides/errors",
           "guides/versioning",
@@ -150,9 +155,19 @@
     ]
   },
   "metadata": {
-    "forceDeploy": "2026-07-31"
+    "forceDeploy": "2026-08-18"
   },
   "seo": {
-    "indexing": "all"
+    "indexing": "all",
+    "organization": {
+      "id": "https://seaotter.dev/#organization",
+      "name": "SeaOtter",
+      "url": "https://seaotter.dev",
+      "logo": "https://seaotter.dev/brand/og-image.png",
+      "sameAs": [
+        "https://docs.seaotter.dev/",
+        "https://hermes-agent.nousresearch.com/docs"
+      ]
+    }
   }
 }

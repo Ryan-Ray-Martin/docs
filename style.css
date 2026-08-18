@@ -1,24 +1,13 @@
-/* SeaOtter docs — prominent brand mark (black chip in light mode) */
-nav-logo,
-nav-logo a,
-#navbar nav-logo,
-[data-component-name="nav-logo"] {
-  display: inline-flex !important;
-  align-items: center !important;
-  height: 48px !important;
+/* SeaOtter docs — align Mintlify chrome with marketing tokens */
+:root {
+  --seaotter-void: #0f0f0f;
+  --seaotter-signal: #0089ff;
+  --seaotter-page: #f4f4f5;
 }
 
-nav-logo img,
-nav-logo svg,
-nav-logo a img,
-#navbar nav-logo img,
-#navbar img[alt="SeaOtter"],
-#navbar img[src*="sea-otter-logo"],
-a img[src*="sea-otter-logo-chip"],
-a img[src*="sea-otter-logo-mark"] {
-  height: 48px !important;
-  width: 48px !important;
-  max-height: 48px !important;
-  max-width: 48px !important;
-  object-fit: contain !important;
+code,
+pre,
+.font-mono {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  letter-spacing: -0.02em;
 }
