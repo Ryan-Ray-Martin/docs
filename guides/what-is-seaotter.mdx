@@ -1,43 +1,122 @@
 ---
 title: "What is SeaOtter?"
 sidebarTitle: "What is SeaOtter?"
-description: "SeaOtter is the managed control plane for Hermes Agent — always-on agents on Google Cloud, without a VPS, installer, or SSH."
+description: "SeaOtter is the managed control plane for Hermes Agent. Run always-on agents on Google Cloud without a VPS, installer, or SSH."
+keywords:
+  [
+    "SeaOtter",
+    "managed Hermes",
+    "Hermes Agent",
+    "always-on agent",
+    "seaotter.dev",
+    "control plane",
+  ]
 ---
 
-SeaOtter (**[seaotter.dev](https://seaotter.dev)**) is the **managed control plane for Hermes Agent**. You create, poll, and run always-on agents. We handle isolation, TLS, backups, and lifecycle. Hermes stays Hermes. You do not own a VPS, watch an installer, or SSH into boxes when something flakes.
+SeaOtter is the **managed control plane for Hermes Agent**. You create an always-on agent on Google Cloud. SeaOtter handles isolation, TLS, backups, and lifecycle. You do not own a VPS, watch an installer, or SSH into a box.
 
-This page is the citeable definition. It is **not** [seaotter.ai](https://seaotter.ai) (OtterScore / Ocean), a different product.
+[Hermes Agent](https://hermes-agent.nousresearch.com/docs) is the open-source agent runtime. SeaOtter provisions that runtime and keeps it running. Hermes stays Hermes.
 
-## What you get
+<Note>
+  This product is **[seaotter.dev](https://seaotter.dev)**. It is not [seaotter.ai](https://seaotter.ai) (OtterScore / Ocean), a different company.
+</Note>
 
-- **Always-on Hermes** — the agent keeps working when you close the laptop.
-- **Create → poll → run** — `POST` an agent; provision is async; typical wall time is a few minutes (usually under five).
-- **Connect from chat** — Cursor, Claude, or Codex via MCP ([Connect](/mcp)).
-- **Write-only secrets** — integration keys in Google Secret Manager, not pasted into chat ([Secrets](/guides/secrets)).
-- **Lifecycle without SSH** — pause, restart, restore, credentials, logs through the API or dashboard.
+## Who is SeaOtter for?
 
-## What SeaOtter is not
+Use SeaOtter when you want Hermes always-on after you close the laptop, and you do not want to own the host.
 
-- Not a generic container pad or “any agent” platform — it hosts **Hermes Agent**.
-- Not the only way to run Hermes — self-host remains valid ([Self-host vs managed](/guides/self-host-vs-managed)).
-- Not a free tier — Hobby has a **14-day free trial** with a card at Checkout, then $69/mo. Startup and Business bill immediately.
-- Not multi-region HA — live data plane is **Iowa (`us-central1`)**; other regions are Coming soon ([Regions](/guides/regions)).
-- Not SOC 2 (do not invent compliance badges).
+SeaOtter fits if you:
 
-## Start here
+- Need an agent that keeps working while you are offline
+- Want Cursor, Claude, or Codex to talk to that hosted agent ([Connect from chat](/mcp))
+- Prefer pause, restart, restore, and secrets through an API or dashboard instead of SSH
 
-1. [Quickstart](/) — create an agent or connect from chat.
-2. [Why managed Hermes](https://seaotter.dev/blog/why-managed-hermes) — narrative.
-3. [Pricing](https://seaotter.dev/#pricing) — Hobby $69 · Startup $279 · Business $649 · Enterprise custom.
+Self-host Hermes if you need the box, a custom runtime fork, or data that never leaves your machines. Both paths are valid. See [Self-host vs managed Hermes](/guides/self-host-vs-managed).
+
+## What does SeaOtter include?
+
+- **Always-on Hermes** — the agent keeps running after you close the laptop
+- **Create, then poll until running** — create returns `status: provisioning` immediately; typical wall time is a few minutes (usually under five)
+- **Connect from chat** — Cursor, Claude, or Codex via a `so_…` MCP key ([Connect](/mcp))
+- **Write-only secrets** — integration keys in Google Secret Manager, not pasted into chat ([Secrets](/guides/secrets))
+- **Lifecycle without SSH** — pause, restart, restore, credentials, and logs through the dashboard or API
+- **Per-agent isolation** — each agent runs in its own Kubernetes namespace
+
+Hobby includes a **14-day free trial**. A card is collected at Checkout. After the trial, Hobby is **$69/mo**. Startup is **$279/mo** and Business is **$649/mo**, billed immediately. Enterprise is custom. See [pricing](https://seaotter.dev/#pricing).
+
+## How does SeaOtter relate to Hermes Agent?
+
+Hermes Agent is the agent. SeaOtter is the plane that hosts it.
+
+| Layer | What it is | Where to read |
+| --- | --- | --- |
+| Hermes Agent | Open-source runtime: skills, memory, model config | [Hermes Agent docs](https://hermes-agent.nousresearch.com/docs) |
+| SeaOtter | Managed control plane: provision, secrets, credentials, logs, restore | These docs |
+
+You still use official Hermes docs for tenant runtime behavior. These pages document create, poll, connect, and operate.
+
+## How does an agent come up?
+
+<Steps>
+  <Step title="Create the agent">
+    Sign up at [seaotter.dev](https://seaotter.dev) or call `POST /api/v1/agents`. The response includes `status: provisioning` immediately. Provision continues in the background.
+  </Step>
+  <Step title="Poll until the dashboard is reachable">
+    Poll `GET /api/v1/agents/{id}` and `config.provisioning_stages` until `wizard_reachable` is `ok` and `status` is `running`. Typical wall time is a few minutes, usually under five. Stage order is in [Provisioning lifecycle](/guides/provisioning-lifecycle).
+  </Step>
+  <Step title="Operate without SSH">
+    Connect from Cursor, Claude, or Codex, or use the dashboard and API. Pause, restart, restore, secrets, and credentials do not require a shell on the box.
+  </Step>
+</Steps>
+
+## Which region does SeaOtter run in?
+
+SeaOtter runs on **Google Cloud**. The control plane and the live agent data plane are in **Iowa (`us-central1`)**. Other catalog regions (South Carolina, Belgium, Singapore) are Coming soon. SeaOtter is not active-active multi-region HA. Details: [Regions](/guides/regions).
+
+## What is out of scope?
+
+- SeaOtter hosts **Hermes Agent**, not a generic container pad or an “any agent” platform
+- SeaOtter is not the only way to run Hermes — [self-host](/guides/self-host-vs-managed) remains valid
+- There is no free tier and no no-card plan — Hobby’s 14-day trial still collects a card at Checkout
+- SeaOtter does not currently publish SOC 2 or ISO certifications
+- A single agent does not fail over across regions
+
+## What should I read next?
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/">
+    Create an agent or connect from chat. Typical wall time is a few minutes.
+  </Card>
+  <Card title="Self-host vs managed" icon="code-compare" href="/guides/self-host-vs-managed">
+    When to keep the VPS, and when the control plane is the better path.
+  </Card>
+  <Card title="Connect from chat" icon="comments" href="/mcp">
+    Use Cursor, Claude, or Codex with a `so_…` key — not local `hermes mcp serve`.
+  </Card>
+  <Card title="Why managed Hermes" icon="book" href="https://seaotter.dev/blog/why-managed-hermes">
+    Longer narrative on always-on Hermes without owning the host.
+  </Card>
+</CardGroup>
+
+## Frequently asked questions
 
 <AccordionGroup>
   <Accordion title="Is SeaOtter the same as seaotter.ai?">
-    No. **seaotter.dev** is managed Hermes Agent hosting (this docs site). **seaotter.ai** is a separate OtterScore / Ocean product. Use this site for always-on Hermes, Connect, and the control-plane API.
+    No. **seaotter.dev** is managed Hermes Agent hosting (this docs site). **seaotter.ai** is a separate OtterScore / Ocean product. Use seaotter.dev for always-on Hermes, Connect, and the control-plane API.
   </Accordion>
-  <Accordion title="Do I still use official Hermes docs?">
-    Yes. Tenant runtime, skills, and Hermes configuration live in [Hermes Agent docs](https://hermes-agent.nousresearch.com/docs). These pages document the **control plane** that provisions and operates that runtime.
+  <Accordion title="What is Hermes Agent?">
+    Hermes Agent is an open-source AI agent. SeaOtter hosts and operates it. For skills, memory, and Hermes configuration, use the [Hermes Agent docs](https://hermes-agent.nousresearch.com/docs).
+  </Accordion>
+  <Accordion title="Do I need SSH or a VPS?">
+    No. Pause, restart, restore, secrets, logs, and credentials go through the SeaOtter dashboard or API. You do not SSH into boxes.
+  </Accordion>
+  <Accordion title="How long until an agent is running?">
+    Typical wall time is a few minutes, usually under five. Create returns `status: provisioning` immediately. Poll `config.provisioning_stages` until `wizard_reachable` is `ok`. See [Provisioning lifecycle](/guides/provisioning-lifecycle).
   </Accordion>
   <Accordion title="Is there a free plan?">
-    No free tier. Hobby includes a 14-day free trial; a card is collected at Checkout. After the trial, Hobby is $69/mo unless you cancel in the billing portal.
+    No free tier. Hobby includes a 14-day free trial; a card is collected at Checkout. After the trial, Hobby is $69/mo unless you cancel in the billing portal. Startup and Business have no trial.
+  </Accordion>
+  <Accordion title="Can I move off SeaOtter later?">
+    Yes. Hermes is still Hermes. Skills, memory, and model credentials can point at another host or a VPS. SeaOtter is the plane, not a proprietary agent runtime.
   </Accordion>
 </AccordionGroup>
