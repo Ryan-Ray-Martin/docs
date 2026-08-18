@@ -1,0 +1,47 @@
+---
+title: "Self-host vs managed Hermes"
+sidebarTitle: "Self-host vs managed"
+description: "Own the VPS, or operate Hermes from a control plane? Honest split: when to self-host, when SeaOtter is the managed path."
+---
+
+Self-host Hermes if you want the box. Use **SeaOtter** if you want always-on Hermes without owning install, process supervision, TLS, and SSH recovery.
+
+Both paths are legitimate. Hermes remains open-source either way. SeaOtter does not replace Hermes; it is the **managed control plane** ([What is SeaOtter?](/guides/what-is-seaotter)).
+
+## Decision
+
+| You want… | Choose |
+| --- | --- |
+| Full host control, custom runtime forks, data never leaves your machines | Self-host ([Hermes install](https://hermes-agent.nousresearch.com/docs)) |
+| Always-on agent without a VPS job; pause / restart / restore from an API | [SeaOtter](https://seaotter.dev) |
+| Talk to hosted Hermes from Cursor, Claude, or Codex | SeaOtter [Connect](/mcp) |
+| Lowest invoice and you already run Linux production | Self-host |
+
+We do not publish invented “hours saved” percentages. The contrast is structural: you either own the failure modes, or the plane does.
+
+## What managed actually does
+
+On SeaOtter you **create, poll, and run**:
+
+1. Create an agent (`status: provisioning` immediately).
+2. Poll stages until `wizard_reachable` is ok (typical wall time: a few minutes).
+3. Operate without SSH — secrets, credentials, logs, restore.
+
+Per-agent Kubernetes namespaces, Google Secret Manager for integration keys, Google Cloud **us-central1** today ([Regions](/guides/regions)).
+
+Longer narrative: [Self-host vs managed Hermes](https://seaotter.dev/blog/self-host-vs-managed-hermes) (eng blog).
+
+## What we do not claim
+
+- That self-hosting is “wrong.”
+- That SeaOtter is the only managed Hermes host.
+- SOC 2, multi-region HA, or a no-card free tier.
+
+<AccordionGroup>
+  <Accordion title="Can I move off SeaOtter later?">
+    Hermes is still Hermes. Skills, memory, and model credentials are yours to point at another host or a VPS. SeaOtter is the plane, not a proprietary agent runtime.
+  </Accordion>
+  <Accordion title="Is Hobby a free forever plan?">
+    No. Hobby is $69/mo after a 14-day trial (card at Checkout). Startup and Business have no trial.
+  </Accordion>
+</AccordionGroup>

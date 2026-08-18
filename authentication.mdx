@@ -3,6 +3,8 @@ title: Authentication
 description: When to use control-plane API keys vs Clerk session JWTs.
 ---
 
+Authenticate to the **SeaOtter control plane** with `Authorization: Bearer <token>`. Scripts, MCP, and CI use a SeaOtter access key (`so_…`). The signed-in dashboard uses a Clerk session JWT. Hermes **runtime** credentials on each agent are a separate secret — do not put `api_server_key` in MCP config.
+
 Every authenticated control-plane request uses:
 
 ```http

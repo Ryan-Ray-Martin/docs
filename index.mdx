@@ -1,9 +1,11 @@
 ---
 title: Quickstart
-description: Create your first SeaOtter agent and see it running in under five minutes.
+description: Create your first SeaOtter-hosted Hermes agent — typically running in under five minutes — or connect from Cursor, Claude, or Codex.
 ---
 
-<div className="flex flex-col items-center gap-4 text-center not-prose mb-10">
+SeaOtter is the **managed control plane for Hermes Agent**. Create an always-on agent on Google Cloud, poll until it is running (typical wall time: a few minutes), then operate it without SSH. Full definition: [What is SeaOtter?](/guides/what-is-seaotter).
+
+<div className="flex flex-col items-center gap-4 text-center not-prose mb-10 mt-8">
   <img
     src="/logo/light.png"
     alt="SeaOtter"
@@ -14,13 +16,12 @@ description: Create your first SeaOtter agent and see it running in under five m
     alt="SeaOtter"
     className="hidden h-20 w-auto dark:block"
   />
-  <h1 className="text-4xl font-semibold tracking-tight">SeaOtter</h1>
   <p className="max-w-xl text-lg text-gray-600 dark:text-gray-300">
-    Managed control plane for Hermes Agent — provision, pause, and operate agents on Google Cloud.
+    Provision, pause, and operate Hermes on Google Cloud — no VPS, no installer to watch.
   </p>
 </div>
 
-SeaOtter is a managed control plane for Hermes Agent. Pick a path:
+Pick a path:
 
 ## Recommended: connect from chat (MCP)
 
@@ -82,7 +83,21 @@ Stages run in fixed order until `wizard_reachable` is `ok` and `status` becomes 
 
 ## Next
 
+- [What is SeaOtter?](/guides/what-is-seaotter) — category definition
+- [Self-host vs managed](/guides/self-host-vs-managed) — when to keep the VPS
 - [Connect from chat (MCP)](/mcp) — Claude, Cursor, Codex
 - [Authentication](/authentication) — API keys vs Clerk JWTs
-- [API reference](/api-reference) — interactive try-it against production
+- [API reference](https://docs.seaotter.dev/api-reference) — interactive try-it against production
 - [Upstream Hermes docs](https://hermes-agent.nousresearch.com/docs) — tenant runtime, not the control plane
+
+<AccordionGroup>
+  <Accordion title="How long until the agent is running?">
+    Typical wall time is a few minutes (usually under five) while namespace, Helm, pod, DNS, and dashboard gates complete. Poll `config.provisioning_stages` until `wizard_reachable` is `ok`. Details: [Provisioning lifecycle](/guides/provisioning-lifecycle).
+  </Accordion>
+  <Accordion title="Do I SSH into the box?">
+    No. Pause, restart, restore, secrets, and credentials go through the dashboard or API. See [What is SeaOtter?](/guides/what-is-seaotter).
+  </Accordion>
+  <Accordion title="Is this seaotter.ai?">
+    No. These docs are **seaotter.dev** (managed Hermes hosting). seaotter.ai is a different OtterScore product.
+  </Accordion>
+</AccordionGroup>
